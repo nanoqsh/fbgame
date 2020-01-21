@@ -3,8 +3,6 @@
 #include <string>
 
 struct game_config {
-    static constexpr const char path[] = "config.yaml";
-
     game_config();
 
     int get_n() const;

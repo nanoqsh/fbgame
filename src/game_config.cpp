@@ -1,4 +1,5 @@
 #include "game_config.h"
+#include "path.h"
 
 #include <yaml-cpp/yaml.h>
 #include <fstream>
@@ -18,12 +19,12 @@ game_config::game_config():
     n(1)
 {
     std::ifstream file;
-    file.open(game_config::path);
+    file.open(path::config);
 
     if (!file.is_open()) {
         std::cerr
             << "Config file ("
-            << game_config::path
+            << path::config
             << ") not found! "
             << "Use defaults"
             << std::endl;
