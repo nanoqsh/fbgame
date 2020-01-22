@@ -11,6 +11,8 @@ namespace engine {
 
         render &operator=(render) = delete;
 
+        void check_errors() const;
+
         void clear_color(glm::vec4 color) const;
     };
 }
