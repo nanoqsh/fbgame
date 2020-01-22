@@ -18,8 +18,7 @@ add_executable(fbgame
         src/game_config.h
         src/game.cpp
         src/game.h
-        src/path.h
-        )
+        src/path.h)
 
 
 # Link include and lib directory

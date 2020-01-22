@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <memory>
 #include <functional>
+#include <utility>
 
 struct input {
     int key;
@@ -14,9 +15,12 @@ struct input {
 };
 
 namespace engine {
+    struct render;
+
     struct window {
         using window_ptr = std::unique_ptr<GLFWwindow, void (*)(GLFWwindow *)>;
-        using loop_callback = std::function<void()>;
+        using render_ptr = std::unique_ptr<render>;
+        using loop_callback = std::function<void(const render &)>;
         using keypress_callback = std::function<void(window &, const input &)>;
 
         window(int width, int height, const char *title);
@@ -29,8 +33,11 @@ namespace engine {
 
         void set_should_close();
 
+        std::pair<int, int> get_framebuffer_size() const;
+
     private:
         window_ptr window_handler;
+        render_ptr render_handler;
         const keypress_callback *key_callback_function;
     };
 }

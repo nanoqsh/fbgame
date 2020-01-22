@@ -1,6 +1,7 @@
 #include "window.h"
 
 #include <stdexcept>
+#include "render.h"
 
 using namespace engine;
 
@@ -21,6 +22,7 @@ static window::window_ptr init_window(int width, int height, const char *title) 
 
 window::window(int width, int height, const char *title) :
         window_handler(init_window(width, height, title)),
+        render_handler(nullptr),
         key_callback_function(nullptr) {
     if (!window_handler) {
         throw std::runtime_error("failed to create GLFW window");
@@ -28,14 +30,7 @@ window::window(int width, int height, const char *title) :
 
     glfwMakeContextCurrent(window_handler.get());
 
-    glewExperimental = GL_TRUE;
-    if (glewInit() != GLEW_OK) {
-        throw std::runtime_error("failed to initialize GLEW");
-    }
-
-    int actual_width, actual_height;
-    glfwGetFramebufferSize(window_handler.get(), &actual_width, &actual_height);
-    glViewport(0, 0, actual_width, actual_height);
+    render_handler = std::make_unique<render>(*this);
 }
 
 void window::set_should_close() {
@@ -60,10 +55,16 @@ void window::run(const window::loop_callback &loop_fn, const window::keypress_ca
 
     while (!glfwWindowShouldClose(window_handler.get())) {
         glfwPollEvents();
-        loop_fn();
+        loop_fn(*render_handler.get());
         glfwSwapBuffers(window_handler.get());
     }
 
     glfwSetKeyCallback(window_handler.get(), nullptr);
     key_callback_function = nullptr;
+}
+
+std::pair<int, int> window::get_framebuffer_size() const {
+    int width, height;
+    glfwGetFramebufferSize(window_handler.get(), &width, &height);
+    return std::pair<int, int>(width, height);
 }
