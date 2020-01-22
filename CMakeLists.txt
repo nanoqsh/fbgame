@@ -3,7 +3,23 @@ project(fbgame)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(fbgame src/main.cpp src/game_config.cpp src/game_config.h src/engine/texture.cpp src/engine/texture.h src/game.cpp src/game.h src/engine/render.cpp src/engine/render.h src/path.h)
+
+set(engine_dir ${CMAKE_CURRENT_SOURCE_DIR}/src/engine)
+file(GLOB engine
+        ${engine_dir}/*.cpp
+        ${engine_dir}/*.h
+        )
+
+
+add_executable(fbgame
+        ${engine}
+        src/main.cpp
+        src/game_config.cpp
+        src/game_config.h
+        src/game.cpp
+        src/game.h
+        src/path.h
+        )
 
 
 # Link include and lib directory

@@ -1,12 +1,16 @@
 #include <iostream>
 
-#include "engine/render.h"
+#include "game.h"
 #include "game_config.h"
 
-using namespace engine;
-
 int main() {
-    render r;
+    try {
+        game fb;
+        fb.run();
+    } catch (const std::exception &ex) {
+        std::cerr << ex.what() << std::endl;
+        return 1;
+    }
 
     game_config config;
     std::cout << config.get_n() << std::endl;

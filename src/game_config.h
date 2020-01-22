@@ -6,7 +6,8 @@ struct game_config {
     game_config();
 
     int get_n() const;
-    const std::string& get_key() const;
+
+    const std::string &get_key() const;
 
 private:
     int n;

@@ -1,0 +1,69 @@
+#include "window.h"
+
+#include <stdexcept>
+
+using namespace engine;
+
+static window::window_ptr init_window(int width, int height, const char *title) {
+    glfwInit();
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+
+    return window::window_ptr(
+            glfwCreateWindow(width, height, title, nullptr, nullptr),
+            [](GLFWwindow *) {
+                glfwTerminate();
+            }
+    );
+}
+
+window::window(int width, int height, const char *title) :
+        window_handler(init_window(width, height, title)),
+        key_callback_function(nullptr) {
+    if (!window_handler) {
+        throw std::runtime_error("failed to create GLFW window");
+    }
+
+    glfwMakeContextCurrent(window_handler.get());
+
+    glewExperimental = GL_TRUE;
+    if (glewInit() != GLEW_OK) {
+        throw std::runtime_error("failed to initialize GLEW");
+    }
+
+    int actual_width, actual_height;
+    glfwGetFramebufferSize(window_handler.get(), &actual_width, &actual_height);
+    glViewport(0, 0, actual_width, actual_height);
+}
+
+void window::set_should_close() {
+    glfwSetWindowShouldClose(window_handler.get(), GL_TRUE);
+}
+
+void window::run(const window::loop_callback &loop_fn, const window::keypress_callback &keypress_fn) {
+    key_callback_function = &keypress_fn;
+
+    glfwSetWindowUserPointer(window_handler.get(), this);
+
+    glfwSetKeyCallback(
+            window_handler.get(),
+            [](GLFWwindow *window_ptr, int key, int scancode, int action, int mode) {
+                auto *self = static_cast<window *>(glfwGetWindowUserPointer(window_ptr));
+
+                if (action == GLFW_PRESS && self->key_callback_function) {
+                    (*self->key_callback_function)(*self, input{key, scancode, mode});
+                }
+            }
+    );
+
+    while (!glfwWindowShouldClose(window_handler.get())) {
+        glfwPollEvents();
+        loop_fn();
+        glfwSwapBuffers(window_handler.get());
+    }
+
+    glfwSetKeyCallback(window_handler.get(), nullptr);
+    key_callback_function = nullptr;
+}

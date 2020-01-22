@@ -5,29 +5,28 @@
 #include <fstream>
 #include <iostream>
 
-static int load_int(const char* key, const YAML::Node& node, int def = 0) {
+static int load_int(const char *key, const YAML::Node &node, int def = 0) {
     YAML::Node n = node[key];
     return n.IsScalar() ? n.as<int>() : def;
 }
 
-static std::string load_string(const char* key, const YAML::Node& node, const char* def) {
+static std::string load_string(const char *key, const YAML::Node &node, const char *def) {
     YAML::Node n = node[key];
     return n.IsScalar() ? n.as<std::string>() : std::string(def);
 }
 
-game_config::game_config():
-    n(1)
-{
+game_config::game_config() :
+        n(1) {
     std::ifstream file;
     file.open(path::config);
 
     if (!file.is_open()) {
         std::cerr
-            << "Config file ("
-            << path::config
-            << ") not found! "
-            << "Use defaults"
-            << std::endl;
+                << "Config file ("
+                << path::config
+                << ") not found! "
+                << "Use defaults"
+                << std::endl;
 
         return;
     }
