@@ -6,6 +6,8 @@ namespace engine {
     struct shader {
         shader(const char *vs_file, const char *fs_file);
 
+        ~shader();
+
         shader(shader &) = delete;
 
         shader &operator=(shader) = delete;
@@ -13,6 +15,6 @@ namespace engine {
         void use() const;
 
     private:
-        GLuint shader_program = 0;
+        GLuint program_handler = 0;
     };
 }

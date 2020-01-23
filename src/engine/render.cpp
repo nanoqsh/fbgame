@@ -1,4 +1,5 @@
 #include "render.h"
+#include "../path.h"
 
 #include <GL/glew.h>
 #include <stdexcept>
@@ -14,12 +15,7 @@ render::render(const window &win) {
     auto[width, height] = win.get_framebuffer_size();
     glViewport(0, 0, width, height);
 
-    check_errors();
-
-    shader_handler = std::make_unique<shader>(
-            "shaders/def.vs.glsl",
-            "shaders/def.fs.glsl"
-    );
+    shader_handler = std::make_unique<shader>(path::vertex_shader, path::fragment_shader);
 
     check_errors();
 }

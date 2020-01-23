@@ -14,3 +14,8 @@ engine::rect_render::rect_render() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
+
+engine::rect_render::~rect_render() {
+    glDeleteVertexArrays(1, &vao_handler);
+    glDeleteBuffers(1, &vbo_handler);
+}

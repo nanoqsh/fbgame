@@ -13,7 +13,7 @@ static std::string read_file(const char *file) {
     );
 }
 
-static void check_error(GLuint shader_handler) {
+static void check_shader_error(GLuint shader_handler) {
     GLint success;
     GLchar info_log[512];
     glGetShaderiv(shader_handler, GL_COMPILE_STATUS, &success);
@@ -21,6 +21,20 @@ static void check_error(GLuint shader_handler) {
     if (!success) {
         glGetShaderInfoLog(shader_handler, 512, nullptr, info_log);
         std::string info("shader compilation failed\n");
+        info.append(info_log);
+
+        throw std::runtime_error(info);
+    }
+}
+
+static void check_program_error(GLuint program_handler) {
+    GLint success;
+    GLchar info_log[512];
+    glGetProgramiv(program_handler, GL_LINK_STATUS, &success);
+
+    if (!success) {
+        glGetProgramInfoLog(program_handler, 512, nullptr, info_log);
+        std::string info("shader program building failed\n");
         info.append(info_log);
 
         throw std::runtime_error(info);
@@ -35,7 +49,7 @@ static GLuint create_shader(const char *file, GLenum shader_type) {
     glShaderSource(shader_handler, 1, &code_ptr, nullptr);
     glCompileShader(shader_handler);
 
-    check_error(shader_handler);
+    check_shader_error(shader_handler);
 
     return shader_handler;
 }
@@ -44,28 +58,22 @@ shader::shader(const char *vs_file, const char *fs_file) {
     GLuint vertex_shader = create_shader(vs_file, GL_VERTEX_SHADER);
     GLuint fragment_shader = create_shader(fs_file, GL_FRAGMENT_SHADER);
 
-    shader_program = glCreateProgram();
+    program_handler = glCreateProgram();
 
-    glAttachShader(shader_program, vertex_shader);
-    glAttachShader(shader_program, fragment_shader);
-    glLinkProgram(shader_program);
+    glAttachShader(program_handler, vertex_shader);
+    glAttachShader(program_handler, fragment_shader);
+    glLinkProgram(program_handler);
 
-    GLint success;
-    GLchar info_log[512];
-    glGetProgramiv(shader_program, GL_LINK_STATUS, &success);
-
-    if (!success) {
-        glGetProgramInfoLog(shader_program, 512, nullptr, info_log);
-        std::string info("shader program building failed\n");
-        info.append(info_log);
-
-        throw std::runtime_error(info);
-    }
+    check_program_error(program_handler);
 
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
 }
 
+shader::~shader() {
+    glDeleteProgram(program_handler);
+}
+
 void shader::use() const {
-    glUseProgram(shader_program);
+    glUseProgram(program_handler);
 }
