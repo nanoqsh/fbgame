@@ -20,10 +20,10 @@ namespace engine {
     struct window {
         using window_ptr = std::unique_ptr<GLFWwindow, void (*)(GLFWwindow *)>;
         using render_ptr = std::unique_ptr<render>;
-        using loop_callback = std::function<void(const render &)>;
+        using loop_callback = std::function<void(const render &, double delta_time)>;
         using keypress_callback = std::function<void(window &, const input &)>;
 
-        window(int width, int height, const char *title);
+        window(int width, int height, const char *title, bool vsync = true);
 
         window(window &) = delete;
 

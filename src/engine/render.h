@@ -22,7 +22,7 @@ namespace engine {
 
         void clear_color(glm::vec4 color) const;
 
-        void draw_rect(rect r) const;
+        void draw_rect(rect r, glm::vec4 color = glm::vec4(1.0f)) const;
 
     private:
         shared_ptr shader_handler;

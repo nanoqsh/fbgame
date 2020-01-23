@@ -1,7 +1,7 @@
 #pragma once
 
 struct game {
-    game();
+    game() = default;
 
     game(const game &) = delete;
 

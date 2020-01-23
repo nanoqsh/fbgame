@@ -1,12 +1,22 @@
 #include "shader.h"
 
 #include <fstream>
+#include <string>
 #include <stdexcept>
 
 using namespace engine;
 
 static std::string read_file(const char *file) {
     std::ifstream ifs(file);
+
+    if (!ifs) {
+        std::string message("file ");
+        message.append(file);
+        message.append(" not found!");
+
+        throw std::runtime_error(message);
+    }
+
     return std::string(
             (std::istreambuf_iterator<char>(ifs)),
             (std::istreambuf_iterator<char>())
@@ -76,4 +86,39 @@ shader::~shader() {
 
 void shader::use() const {
     glUseProgram(program_handler);
+}
+
+void shader::set_uniform(GLint index, glm::vec4 value) const {
+    use();
+    glUniform4f(index, value.x, value.y, value.z, value.w);
+}
+
+void shader::set_uniform(GLint index, glm::vec3 value) const {
+    use();
+    glUniform3f(index, value.x, value.y, value.z);
+}
+
+void shader::set_uniform(GLint index, glm::vec2 value) const {
+    use();
+    glUniform2f(index, value.x, value.y);
+}
+
+void shader::set_uniform(GLint index, float value) const {
+    use();
+    glUniform1f(index, value);
+}
+
+GLint shader::get_index(const char *name) const {
+    GLint index = glGetUniformLocation(program_handler, name);
+
+    if (index == -1) {
+        std::string message("uniform '");
+        message.append(name);
+        message.append("' not found in program ");
+        message.append(std::to_string(program_handler));
+
+        throw std::runtime_error(message);
+    }
+
+    return index;
 }

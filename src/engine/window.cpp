@@ -20,7 +20,7 @@ static window::window_ptr init_window(int width, int height, const char *title) 
     );
 }
 
-window::window(int width, int height, const char *title) :
+window::window(int width, int height, const char *title, bool vsync) :
         window_handler(init_window(width, height, title)),
         render_handler(nullptr),
         key_callback_function(nullptr) {
@@ -29,6 +29,10 @@ window::window(int width, int height, const char *title) :
     }
 
     glfwMakeContextCurrent(window_handler.get());
+
+    if (vsync) {
+        glfwSwapInterval(1);
+    }
 
     render_handler = std::make_unique<render>(*this);
 }
@@ -53,10 +57,17 @@ void window::run(const window::loop_callback &loop_fn, const window::keypress_ca
             }
     );
 
+    double last_time = glfwGetTime();
+    double delta_time = 0;
+
     while (!glfwWindowShouldClose(window_handler.get())) {
         glfwPollEvents();
-        loop_fn(*render_handler.get());
+        loop_fn(*render_handler.get(), delta_time);
         glfwSwapBuffers(window_handler.get());
+
+        double current_time = glfwGetTime();
+        delta_time = current_time - last_time;
+        last_time = current_time;
     }
 
     glfwSetKeyCallback(window_handler.get(), nullptr);

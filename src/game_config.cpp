@@ -29,7 +29,7 @@ game_config::game_config() {
                 << "Config file ("
                 << path::config
                 << ") not found! "
-                << "Use defaults"
+                << "Used defaults"
                 << std::endl;
 
         return;
