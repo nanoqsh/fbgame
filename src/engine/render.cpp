@@ -16,6 +16,7 @@ render::render(const window &win) {
     glViewport(0, 0, width, height);
 
     shader_handler = std::make_unique<shader>(path::vertex_shader, path::fragment_shader);
+    rect_render_handler = std::make_unique<rect_render>(2);
 
     check_errors();
 }
@@ -60,4 +61,10 @@ void render::check_errors() const {
 
         throw std::runtime_error(err_message);
     }
+}
+
+void render::draw_rect(rect r) const {
+    shader_handler->use();
+    rect_render_handler->draw(r);
+    check_errors();
 }

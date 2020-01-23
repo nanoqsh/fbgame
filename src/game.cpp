@@ -8,6 +8,7 @@
 
 #include "engine/window.h"
 #include "engine/render.h"
+#include "engine/rect.h"
 
 using namespace engine;
 
@@ -18,6 +19,8 @@ void game::run() {
     w.run(
             [](const render &r) {
                 r.clear_color(glm::vec4(0.2f, 0.3f, 0.3f, 1.0f));
+
+                r.draw_rect(rect(-0.4f, -0.4f, 0.6f, 0.6f));
             },
             [](window &w, const input &in) {
                 if (in.key == GLFW_KEY_ESCAPE) {
