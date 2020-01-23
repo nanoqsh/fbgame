@@ -15,6 +15,13 @@ render::render(const window &win) {
     glViewport(0, 0, width, height);
 
     check_errors();
+
+    shader_handler = std::make_unique<shader>(
+            "shaders/def.vs.glsl",
+            "shaders/def.fs.glsl"
+    );
+
+    check_errors();
 }
 
 void render::clear_color(glm::vec4 color) const {
@@ -26,7 +33,7 @@ void render::check_errors() const {
     GLenum err;
 
     while ((err = glGetError()) != GL_NO_ERROR) {
-        const char* err_message;
+        const char *err_message;
 
         switch (err) {
             case GL_INVALID_ENUM:

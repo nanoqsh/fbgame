@@ -41,3 +41,11 @@ foreach(data_file ${data_files})
 endforeach(data_file)
 
 configure_file(config.yaml ${CMAKE_BINARY_DIR}/config.yaml COPYONLY)
+
+file(GLOB_RECURSE shader_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/
+        ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*.glsl
+        )
+
+foreach(shader_file ${shader_files})
+    configure_file(${shader_file} ${CMAKE_BINARY_DIR}/${shader_file} COPYONLY)
+endforeach(shader_file)
