@@ -1,3 +1,3 @@
 
-n: 56
-key: text
+vertex_shader: 'shaders/def.vs.glsl'
+fragment_shader: 'shaders/def.fs.glsl'

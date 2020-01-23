@@ -15,7 +15,7 @@ using namespace engine;
 game::game() = default;
 
 void game::run() {
-    window w(400, 400, "Window");
+    window w(600, 600, "Window");
     w.run(
             [](const render &r) {
                 r.clear_color(glm::vec4(0.2f, 0.3f, 0.3f, 1.0f));

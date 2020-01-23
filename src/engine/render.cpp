@@ -1,5 +1,5 @@
 #include "render.h"
-#include "../path.h"
+#include "../game_config.h"
 
 #include <GL/glew.h>
 #include <stdexcept>
@@ -15,7 +15,11 @@ render::render(const window &win) {
     auto[width, height] = win.get_framebuffer_size();
     glViewport(0, 0, width, height);
 
-    shader_handler = std::make_unique<shader>(path::vertex_shader, path::fragment_shader);
+    const char* vs = game_config::get().get_vertex_shader().c_str();
+    const char* fs = game_config::get().get_fragment_shader().c_str();
+
+    shader_handler = std::make_unique<shader>(vs, fs);
+
     rect_render_handler = std::make_unique<rect_render>(2);
 
     check_errors();

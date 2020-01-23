@@ -7,16 +7,20 @@
 
 static int load_int(const char *key, const YAML::Node &node, int def = 0) {
     YAML::Node n = node[key];
-    return n.IsScalar() ? n.as<int>() : def;
+    return n && n.IsScalar() ? n.as<int>() : def;
 }
 
 static std::string load_string(const char *key, const YAML::Node &node, const char *def) {
     YAML::Node n = node[key];
-    return n.IsScalar() ? n.as<std::string>() : std::string(def);
+    return n && n.IsScalar() ? n.as<std::string>() : std::string(def);
 }
 
-game_config::game_config() :
-        n(1) {
+const game_config & game_config::get() {
+    static game_config instance;
+    return instance;
+}
+
+game_config::game_config() {
     std::ifstream file;
     file.open(path::config);
 
@@ -33,14 +37,20 @@ game_config::game_config() :
 
     YAML::Node config = YAML::Load(file);
 
-    n = load_int("n", config);
     key = load_string("key", config, "none");
-}
 
-int game_config::get_n() const {
-    return n;
+    vertex_shader = load_string("vertex_shader", config, "shaders/def.vs.glsl");
+    fragment_shader = load_string("fragment_shader", config, "shaders/def.fs.glsl");
 }
 
 const std::string &game_config::get_key() const {
     return key;
+}
+
+const std::string &game_config::get_vertex_shader() const {
+    return vertex_shader;
+}
+
+const std::string &game_config::get_fragment_shader() const {
+    return fragment_shader;
 }
