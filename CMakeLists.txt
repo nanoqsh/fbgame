@@ -18,7 +18,8 @@ add_executable(fbgame
         src/game_config.h
         src/game.cpp
         src/game.h
-        src/path.h)
+        src/path.h
+        )
 
 
 # Link include and lib directory
@@ -34,6 +35,7 @@ target_link_libraries(fbgame yaml-cpp glew32s.lib glfw3.lib opengl32.lib SOIL)
 file(GLOB_RECURSE data_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/
         ${CMAKE_CURRENT_SOURCE_DIR}/data/*.yaml
         ${CMAKE_CURRENT_SOURCE_DIR}/data/*.png
+        ${CMAKE_CURRENT_SOURCE_DIR}/data/*.jpg
         )
 
 foreach(data_file ${data_files})

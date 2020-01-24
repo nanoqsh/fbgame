@@ -25,7 +25,11 @@ namespace engine {
 
         void set_uniform(GLint index, glm::vec2 value) const;
 
-        void set_uniform(GLint index, float value) const;
+        void set_uniform(GLint index, GLfloat value) const;
+
+        void set_uniform(GLint index, GLuint value) const;
+
+        void set_uniform(GLint index, GLint value) const;
 
     private:
         GLuint program_handler = 0;

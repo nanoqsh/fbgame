@@ -6,7 +6,7 @@
 
 namespace engine {
     struct rect_render {
-        explicit rect_render(GLuint index);
+        explicit rect_render(GLuint pos_index, GLuint st_map_index);
 
         ~rect_render();
 

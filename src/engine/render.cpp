@@ -6,6 +6,8 @@
 
 using namespace engine;
 
+bool render::created_opengl = false;
+
 render::render(const window &win) {
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
@@ -18,12 +20,14 @@ render::render(const window &win) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    const char* vs = game_config::get().get_vertex_shader().c_str();
-    const char* fs = game_config::get().get_fragment_shader().c_str();
+    created_opengl = true;
+
+    const char *vs = game_config::get().get_vertex_shader().c_str();
+    const char *fs = game_config::get().get_fragment_shader().c_str();
 
     shader_handler = std::make_unique<shader>(vs, fs);
 
-    rect_render_handler = std::make_unique<rect_render>(2);
+    rect_render_handler = std::make_unique<rect_render>(0, 1);
 
     check_errors();
 }
@@ -33,7 +37,11 @@ void render::clear_color(glm::vec4 color) const {
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void render::check_errors() const {
+void render::check_errors() {
+    if (!created_opengl) {
+        throw std::runtime_error("openGL context not yet configured");
+    }
+
     GLenum err;
 
     while ((err = glGetError()) != GL_NO_ERROR) {
@@ -72,7 +80,30 @@ void render::check_errors() const {
 
 void render::draw_rect(rect r, glm::vec4 color) const {
     shader_handler->use();
-    shader_handler->set_uniform(shader_handler->get_index("rect_color"), color);
+
+    GLint mode = shader_handler->get_index("mode");
+    shader_handler->set_uniform(mode, 0u);
+
+    GLint rect_color = shader_handler->get_index("rect_color");
+    shader_handler->set_uniform(rect_color, color);
+
+    rect_render_handler->draw(r);
+
+    check_errors();
+}
+
+void render::draw_rect(rect r, const texture &sprite) const {
+    const GLint SPRITE_UNIT = 0;
+
+    shader_handler->use();
+
+    GLint mode = shader_handler->get_index("mode");
+    shader_handler->set_uniform(mode, 1u);
+
+    GLint sprite_index = shader_handler->get_index("img");
+    shader_handler->set_uniform(sprite_index, SPRITE_UNIT);
+
+    sprite.bind(SPRITE_UNIT);
     rect_render_handler->draw(r);
 
     check_errors();

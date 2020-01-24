@@ -1,27 +1,11 @@
 #include "shader.h"
+#include "files.h"
+#include "render.h"
 
-#include <fstream>
 #include <string>
 #include <stdexcept>
 
 using namespace engine;
-
-static std::string read_file(const char *file) {
-    std::ifstream ifs(file);
-
-    if (!ifs) {
-        std::string message("file ");
-        message.append(file);
-        message.append(" not found!");
-
-        throw std::runtime_error(message);
-    }
-
-    return std::string(
-            (std::istreambuf_iterator<char>(ifs)),
-            (std::istreambuf_iterator<char>())
-    );
-}
 
 static void check_shader_error(GLuint shader_handler) {
     GLint success;
@@ -53,7 +37,7 @@ static void check_program_error(GLuint program_handler) {
 
 static GLuint create_shader(const char *file, GLenum shader_type) {
     GLuint shader_handler = glCreateShader(shader_type);
-    std::string code = read_file(file);
+    std::string code = files::read_file(file);
     const char *code_ptr = code.c_str();
 
     glShaderSource(shader_handler, 1, &code_ptr, nullptr);
@@ -78,6 +62,8 @@ shader::shader(const char *vs_file, const char *fs_file) {
 
     glDeleteShader(vertex_shader);
     glDeleteShader(fragment_shader);
+
+    render::check_errors();
 }
 
 shader::~shader() {
@@ -86,6 +72,21 @@ shader::~shader() {
 
 void shader::use() const {
     glUseProgram(program_handler);
+}
+
+GLint shader::get_index(const char *name) const {
+    GLint index = glGetUniformLocation(program_handler, name);
+
+    if (index == -1) {
+        std::string message("uniform '");
+        message.append(name);
+        message.append("' not found in program ");
+        message.append(std::to_string(program_handler));
+
+        throw std::runtime_error(message);
+    }
+
+    return index;
 }
 
 void shader::set_uniform(GLint index, glm::vec4 value) const {
@@ -103,22 +104,17 @@ void shader::set_uniform(GLint index, glm::vec2 value) const {
     glUniform2f(index, value.x, value.y);
 }
 
-void shader::set_uniform(GLint index, float value) const {
+void shader::set_uniform(GLint index, GLfloat value) const {
     use();
     glUniform1f(index, value);
 }
 
-GLint shader::get_index(const char *name) const {
-    GLint index = glGetUniformLocation(program_handler, name);
+void shader::set_uniform(GLint index, GLuint value) const {
+    use();
+    glUniform1ui(index, value);
+}
 
-    if (index == -1) {
-        std::string message("uniform '");
-        message.append(name);
-        message.append("' not found in program ");
-        message.append(std::to_string(program_handler));
-
-        throw std::runtime_error(message);
-    }
-
-    return index;
+void shader::set_uniform(GLint index, GLint value) const {
+    use();
+    glUniform1i(index, value);
 }

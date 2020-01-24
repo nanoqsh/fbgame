@@ -6,6 +6,7 @@
 #include "shader.h"
 #include "rect.h"
 #include "rect_render.h"
+#include "texture.h"
 
 namespace engine {
     struct render {
@@ -18,14 +19,18 @@ namespace engine {
 
         render &operator=(render) = delete;
 
-        void check_errors() const;
+        static void check_errors();
 
         void clear_color(glm::vec4 color) const;
 
         void draw_rect(rect r, glm::vec4 color = glm::vec4(1.0f)) const;
 
+        void draw_rect(rect r, const texture &sprite) const;
+
     private:
         shared_ptr shader_handler;
         rect_render_ptr rect_render_handler;
+
+        static bool created_opengl;
     };
 }
