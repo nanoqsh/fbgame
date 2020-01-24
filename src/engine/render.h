@@ -28,7 +28,11 @@ namespace engine {
 
         void clear_color(glm::vec4 color) const;
 
-        void draw_rect(rect r, glm::vec4 color = glm::vec4(1.0f)) const;
+        void set_color(glm::vec4 color) const;
+
+        void reset_color() const;
+
+        void draw_rect(rect r) const;
 
         void draw_rect(rect r, const texture &sprite, rect st_map = rect(0.0f, 0.0f, 1.0f, 1.0f)) const;
 

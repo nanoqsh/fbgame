@@ -20,8 +20,8 @@ namespace engine {
         private:
             texture font_texture;
 
-            float char_width = 0.0f;
-            float char_height = 0.0f;
+            float char_s = 0.0f;
+            float char_t = 0.0f;
 
             font_config fc{};
         };

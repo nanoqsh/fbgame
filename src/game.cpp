@@ -42,17 +42,20 @@ void game::run() {
         auto alpha = std::sin((float) time) * 0.5f + 0.5f;
         auto rect_color = glm::vec4(0.5f, alpha, 0.9f, 1.0f);
 
-        r.draw_rect(r1, rect_color);
+        r.set_color(rect_color);
+        r.draw_rect(r1);
 
+        r.reset_color();
         for (int i = 0; i < 12; ++i) {
-            float step = 25.f;
-            auto r2 = rect(-10.0f + float(i) * step, 90.0f, 10.0f + float(i) * step, 110.0f);
+            float step = (float) i * 25.f;
+            auto r2 = rect(-10.0f + step, 90.0f, 10.0f + step, 110.0f);
 
             if (r1.intersect_rect(r2)) {
                 r.draw_rect(r2, *sky);
             }
         }
 
+        r.set_color(glm::vec4(alpha, 1.0f, 1.0f - alpha, 1.0f));
         r.print(glm::vec2(20.0f, 120.0f + alpha * 50.0f), "HELLO, KITTY!");
     });
 }

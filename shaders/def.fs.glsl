@@ -12,6 +12,6 @@ void main() {
 	if (mode == 0u) {
 		color = rect_color;
 	} else {
-		color = texture2D(img, st_map_fs);
+		color = rect_color * texture2D(img, st_map_fs);
 	}
 }

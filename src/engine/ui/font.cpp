@@ -8,8 +8,8 @@ font::font() :
         font_texture(game_config::get().get_font().c_str()) {
     fc = game_config::get().get_font_config();
 
-    char_width = 1.0f / (float) fc.width;
-    char_height = 1.0f / (float) fc.height;
+    char_s = 1.0f / (float) fc.width;
+    char_t = 1.0f / (float) fc.height;
 }
 
 void font::print(const engine::render &r, glm::vec2 pos, const char *text) const {
@@ -28,14 +28,14 @@ void font::print(const engine::render &r, glm::vec2 pos, const char *text) const
                 pos.y + fc.size
         );
 
-        float x_pos = (float) x * char_width;
-        float y_pos = (float) y * char_height;
+        float x_pos = (float) x * char_s;
+        float y_pos = (float) y * char_t;
 
         rect st_map(
                 x_pos,
                 y_pos,
-                x_pos + char_width,
-                y_pos + char_height
+                x_pos + char_s,
+                y_pos + char_t
         );
 
         r.draw_rect(char_rect, font_texture, st_map);
