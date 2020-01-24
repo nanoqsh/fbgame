@@ -48,18 +48,34 @@ void window::set_on_keypress(window::on_keypress &&keypress) {
     keypress_fn = keypress;
 }
 
-void window::run(window::on_update &&update) {
-    keypress_fn_ptr = &keypress_fn;
+void window::set_on_mouse_move(window::on_mouse_move &&mouse_move) {
+    mouse_move_fn = mouse_move;
+}
 
+void window::run(window::on_update &&update) {
     glfwSetWindowUserPointer(window_handler.get(), this);
+
+    glfwSetCursorPosCallback(
+            window_handler.get(),
+            [](GLFWwindow *window_ptr, double x_pos, double y_pos) {
+                auto *self = static_cast<window *>(glfwGetWindowUserPointer(window_ptr));
+
+                auto[_, height] = self->get_framebuffer_size();
+                (void) _;
+
+                if (self->mouse_move_fn) {
+                    self->mouse_move_fn(*self, (float) x_pos, (float) (height - 1) - (float) y_pos);
+                }
+            }
+    );
 
     glfwSetKeyCallback(
             window_handler.get(),
             [](GLFWwindow *window_ptr, int key, int scancode, int action, int mode) {
                 auto *self = static_cast<window *>(glfwGetWindowUserPointer(window_ptr));
 
-                if (action == GLFW_PRESS && self->keypress_fn_ptr) {
-                    (*self->keypress_fn_ptr)(*self, input{key, scancode, mode});
+                if (action == GLFW_PRESS && self->keypress_fn) {
+                    self->keypress_fn(*self, input{key, scancode, mode});
                 }
             }
     );
@@ -80,7 +96,7 @@ void window::run(window::on_update &&update) {
     }
 
     glfwSetKeyCallback(window_handler.get(), nullptr);
-    keypress_fn_ptr = nullptr;
+    glfwSetCursorPosCallback(window_handler.get(), nullptr);
 }
 
 std::pair<int, int> window::get_framebuffer_size() const {

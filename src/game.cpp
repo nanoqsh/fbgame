@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <memory>
 #include <cmath>
+#include <iostream>
 
 #include "engine/window.h"
 #include "engine/render.h"
@@ -16,8 +17,17 @@ using namespace engine;
 void game::run() {
     double time = 0.0;
     std::unique_ptr<texture> sky;
+    auto r1 = rect(50.0f, 50.0f, 250.0f, 250.0f);
 
     window w(300, 300, "Window");
+
+    w.set_on_mouse_move([&r1](window &w, float x, float y) {
+        if (r1.intersect_point(x, y)) {
+            std::cout << "int\n";
+        } else {
+            std::cout << "no\n";
+        }
+    });
 
     w.set_on_start([&sky]() {
         sky = std::make_unique<texture>("./data/1.png");
@@ -29,7 +39,7 @@ void game::run() {
         }
     });
 
-    w.run([&time, &sky](const render &r, double delta_time) {
+    w.run([&time, &sky, &r1](const render &r, double delta_time) {
         r.clear_color(glm::vec4(0.2f, 0.3f, 0.3f, 1.0f));
 
         time += delta_time;
@@ -37,7 +47,6 @@ void game::run() {
         auto alpha = std::sin((float) time) * 0.5f + 0.5f;
         auto rect_color = glm::vec4(0.5f, alpha, 0.9f, 1.0f);
 
-        auto r1 = rect(50.0f, 50.0f, 250.0f, 250.0f);
         r.draw_rect(r1, rect_color);
 
         for (int i = 0; i < 12; ++i) {

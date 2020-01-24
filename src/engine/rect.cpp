@@ -5,12 +5,13 @@ rect::rect(glm::vec2 left_bottom, glm::vec2 right_top) :
         right_top(right_top) {
 }
 
+bool rect::intersect_point(float x, float y) const {
+    return left_bottom.x <= x && right_top.x >= x &&
+           left_bottom.y <= y && right_top.y >= y;
+}
+
 bool rect::intersect_point(glm::vec2 point) const {
-    return
-            left_bottom.x >= point.x
-            && right_top.x <= point.x
-            && left_bottom.y >= point.y
-            && right_top.y <= point.y;
+    return intersect_point(point.x, point.y);
 }
 
 rect::rect(float left, float bottom, float right, float top) :

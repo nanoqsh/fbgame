@@ -10,6 +10,8 @@ struct rect {
 
     rect(float left, float bottom, float right, float top);
 
+    bool intersect_point(float x, float y) const;
+
     bool intersect_point(glm::vec2 point) const;
 
     bool intersect_rect(rect other) const;

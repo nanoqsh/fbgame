@@ -23,6 +23,7 @@ namespace engine {
         using on_start = std::function<void()>;
         using on_update = std::function<void(const render &, double delta_time)>;
         using on_keypress = std::function<void(window &, const input &)>;
+        using on_mouse_move = std::function<void(window &, float x, float y)>;
 
         window(int width, int height, const char *title, bool vsync = true);
 
@@ -34,6 +35,8 @@ namespace engine {
 
         void set_on_keypress(on_keypress &&keypress);
 
+        void set_on_mouse_move(on_mouse_move &&mouse_move);
+
         void run(on_update &&update);
 
         void set_should_close();
@@ -43,9 +46,9 @@ namespace engine {
     private:
         window_ptr window_handler;
         render_ptr render_handler;
-        const on_keypress *keypress_fn_ptr = nullptr;
 
         on_start start_fn;
         on_keypress keypress_fn;
+        on_mouse_move mouse_move_fn;
     };
 }
