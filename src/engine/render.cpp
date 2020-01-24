@@ -32,6 +32,7 @@ render::render(const window &win) {
     shader_handler = std::make_unique<shader>(vs, fs);
     rect_render_handler = std::make_unique<rect_render>(0, 1);
     projection_handler = std::make_unique<projection>((float) width, (float) height);
+    font_handler = std::make_unique<ui::font>();
 
     init_render();
     check_errors();
@@ -97,7 +98,7 @@ void render::draw_rect(rect r, glm::vec4 color) const {
     check_errors();
 }
 
-void render::draw_rect(rect r, const texture &sprite) const {
+void render::draw_rect(rect r, const texture &sprite, rect st_map) const {
     const GLint SPRITE_UNIT = 0;
 
     shader_handler->use();
@@ -109,7 +110,7 @@ void render::draw_rect(rect r, const texture &sprite) const {
     shader_handler->set_uniform(sprite_index, SPRITE_UNIT);
 
     sprite.bind(SPRITE_UNIT);
-    rect_render_handler->draw(r);
+    rect_render_handler->draw(r, st_map);
 
     check_errors();
 }
@@ -119,4 +120,13 @@ void render::init_render() {
 
     GLint projection_index = shader_handler->get_index("projection");
     shader_handler->set_uniform(projection_index, projection_handler->get_mat());
+}
+
+void render::print(glm::vec2 pos, const char *text) const {
+    shader_handler->use();
+
+    GLint sprite_index = shader_handler->get_index("img");
+    shader_handler->set_uniform(sprite_index, 0);
+
+    font_handler->print(*this, pos, text);
 }

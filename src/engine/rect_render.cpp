@@ -29,14 +29,14 @@ engine::rect_render::~rect_render() {
     glDeleteBuffers(1, &vbo_handler);
 }
 
-void engine::rect_render::draw(rect r) const {
+void engine::rect_render::draw(rect r, rect st_map) const {
     glm::vec4 points[4] =
             {
                     // reflected by y (v)
-                    {r.left_bottom.x, r.right_top.y,   0.0f, 0.0f},
-                    {r.left_bottom.x, r.left_bottom.y, 0.0f, 1.0f},
-                    {r.right_top.x,   r.left_bottom.y, 1.0f, 1.0f},
-                    {r.right_top.x,   r.right_top.y,   1.0f, 0.0f}
+                    {r.left_bottom.x, r.right_top.y,   st_map.left_bottom.x, st_map.left_bottom.y},
+                    {r.left_bottom.x, r.left_bottom.y, st_map.left_bottom.x, st_map.right_top.y},
+                    {r.right_top.x,   r.left_bottom.y, st_map.right_top.x,   st_map.right_top.y},
+                    {r.right_top.x,   r.right_top.y,   st_map.right_top.x,   st_map.left_bottom.y}
             };
 
     glBindVertexArray(vao_handler);

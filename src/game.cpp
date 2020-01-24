@@ -4,6 +4,8 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <glm/vec4.hpp>
+#include <glm/vec2.hpp>
 #include <memory>
 #include <cmath>
 #include <iostream>
@@ -22,11 +24,7 @@ void game::run() {
     window w(300, 300, "Window");
 
     w.set_on_mouse_move([&r1](window &w, float x, float y) {
-        if (r1.intersect_point(x, y)) {
-            std::cout << "int\n";
-        } else {
-            std::cout << "no\n";
-        }
+        //
     });
 
     w.set_on_start([&sky]() {
@@ -57,5 +55,7 @@ void game::run() {
                 r.draw_rect(r2, *sky);
             }
         }
+
+        r.print(glm::vec2(0.0f, 150.0f), "HELLO, KITTY!");
     });
 }

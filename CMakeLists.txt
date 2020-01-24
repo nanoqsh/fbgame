@@ -3,11 +3,12 @@ project(fbgame)
 
 set(CMAKE_CXX_STANDARD 17)
 
-
 set(engine_dir ${CMAKE_CURRENT_SOURCE_DIR}/src/engine)
 file(GLOB engine
         ${engine_dir}/*.cpp
         ${engine_dir}/*.h
+        ${engine_dir}/ui/*.cpp
+        ${engine_dir}/ui/*.h
         )
 
 

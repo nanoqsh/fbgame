@@ -10,7 +10,7 @@ namespace engine {
 
         ~rect_render();
 
-        void draw(rect r) const;
+        void draw(rect r, rect st_map = rect(0.0f, 0.0f, 1.0f, 1.0f)) const;
 
     private:
         GLuint vbo_handler = 0;
