@@ -4,8 +4,7 @@
 
 int main() {
     try {
-        game fb;
-        fb.run();
+        game::run();
     } catch (const std::exception &ex) {
         std::cerr << ex.what() << std::endl;
         return 1;

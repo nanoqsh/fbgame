@@ -30,11 +30,11 @@ namespace engine {
 
         window &operator=(window) = delete;
 
-        void run(
-                const on_start &start,
-                const on_update &update,
-                const on_keypress &keypress
-        );
+        void set_on_start(on_start &&start);
+
+        void set_on_keypress(on_keypress &&keypress);
+
+        void run(on_update &&update);
 
         void set_should_close();
 
@@ -43,6 +43,9 @@ namespace engine {
     private:
         window_ptr window_handler;
         render_ptr render_handler;
-        const on_keypress *keypress_fn;
+        const on_keypress *keypress_fn_ptr = nullptr;
+
+        on_start start_fn;
+        on_keypress keypress_fn;
     };
 }

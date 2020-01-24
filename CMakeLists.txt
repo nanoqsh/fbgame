@@ -22,7 +22,7 @@ add_executable(fbgame
         )
 
 
-# Link include and lib directory
+# Add include and lib directory
 target_include_directories(fbgame PUBLIC D:/include)
 target_link_directories(fbgame PUBLIC D:/lib)
 
@@ -31,7 +31,7 @@ target_link_directories(fbgame PUBLIC D:/lib)
 target_link_libraries(fbgame yaml-cpp glew32s.lib glfw3.lib opengl32.lib SOIL)
 
 
-# Copy all data files to build directory
+# Copy all data files to the build directory
 file(GLOB_RECURSE data_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/
         ${CMAKE_CURRENT_SOURCE_DIR}/data/*.yaml
         ${CMAKE_CURRENT_SOURCE_DIR}/data/*.png
@@ -44,6 +44,8 @@ endforeach(data_file)
 
 configure_file(config.yaml ${CMAKE_BINARY_DIR}/config.yaml COPYONLY)
 
+
+# Copy shaders to the build directory
 file(GLOB_RECURSE shader_files RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}/
         ${CMAKE_CURRENT_SOURCE_DIR}/shaders/*.glsl
         )

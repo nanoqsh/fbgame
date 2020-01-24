@@ -1,11 +1,11 @@
 #pragma once
 
 struct game {
-    game() = default;
+    game() = delete;
 
     game(const game &) = delete;
 
     game &operator=(game) = delete;
 
-    void run();
+    static void run();
 };

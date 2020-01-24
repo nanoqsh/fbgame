@@ -22,8 +22,7 @@ static window::window_ptr init_window(int width, int height, const char *title) 
 
 window::window(int width, int height, const char *title, bool vsync) :
         window_handler(init_window(width, height, title)),
-        render_handler(nullptr),
-        keypress_fn(nullptr) {
+        render_handler(nullptr) {
     if (!window_handler) {
         throw std::runtime_error("failed to create GLFW window");
     }
@@ -41,12 +40,16 @@ void window::set_should_close() {
     glfwSetWindowShouldClose(window_handler.get(), GL_TRUE);
 }
 
-void window::run(
-        const window::on_start &start,
-        const window::on_update &update,
-        const window::on_keypress &keypress
-) {
-    keypress_fn = &keypress;
+void window::set_on_start(window::on_start &&start) {
+    start_fn = start;
+}
+
+void window::set_on_keypress(window::on_keypress &&keypress) {
+    keypress_fn = keypress;
+}
+
+void window::run(window::on_update &&update) {
+    keypress_fn_ptr = &keypress_fn;
 
     glfwSetWindowUserPointer(window_handler.get(), this);
 
@@ -55,8 +58,8 @@ void window::run(
             [](GLFWwindow *window_ptr, int key, int scancode, int action, int mode) {
                 auto *self = static_cast<window *>(glfwGetWindowUserPointer(window_ptr));
 
-                if (action == GLFW_PRESS && self->keypress_fn) {
-                    (*self->keypress_fn)(*self, input{key, scancode, mode});
+                if (action == GLFW_PRESS && self->keypress_fn_ptr) {
+                    (*self->keypress_fn_ptr)(*self, input{key, scancode, mode});
                 }
             }
     );
@@ -64,7 +67,7 @@ void window::run(
     double last_time = glfwGetTime();
     double delta_time = 0;
 
-    start();
+    start_fn();
 
     while (!glfwWindowShouldClose(window_handler.get())) {
         glfwPollEvents();
@@ -77,7 +80,7 @@ void window::run(
     }
 
     glfwSetKeyCallback(window_handler.get(), nullptr);
-    keypress_fn = nullptr;
+    keypress_fn_ptr = nullptr;
 }
 
 std::pair<int, int> window::get_framebuffer_size() const {
