@@ -4,6 +4,7 @@
 
 #include <string>
 #include <stdexcept>
+#include <glm/gtc/type_ptr.hpp>
 
 using namespace engine;
 
@@ -117,4 +118,8 @@ void shader::set_uniform(GLint index, GLuint value) const {
 void shader::set_uniform(GLint index, GLint value) const {
     use();
     glUniform1i(index, value);
+}
+
+void shader::set_uniform(GLint index, const glm::mat4 &value) const {
+    glUniformMatrix4fv(index, 1, GL_FALSE, glm::value_ptr(value));
 }

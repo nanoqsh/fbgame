@@ -1,9 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
-#include <glm/vec4.hpp>
-#include <glm/vec3.hpp>
-#include <glm/vec2.hpp>
+#include <glm/glm.hpp>
 
 namespace engine {
     struct shader {
@@ -30,6 +28,8 @@ namespace engine {
         void set_uniform(GLint index, GLuint value) const;
 
         void set_uniform(GLint index, GLint value) const;
+
+        void set_uniform(GLint index, const glm::mat4 &value) const;
 
     private:
         GLuint program_handler = 0;

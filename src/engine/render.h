@@ -7,11 +7,13 @@
 #include "rect.h"
 #include "rect_render.h"
 #include "texture.h"
+#include "projection.h"
 
 namespace engine {
     struct render {
         using shared_ptr = std::unique_ptr<shader>;
         using rect_render_ptr = std::unique_ptr<rect_render>;
+        using projection_ptr = std::unique_ptr<projection>;
 
         explicit render(const window &win);
 
@@ -28,8 +30,11 @@ namespace engine {
         void draw_rect(rect r, const texture &sprite) const;
 
     private:
+        void init_render();
+
         shared_ptr shader_handler;
         rect_render_ptr rect_render_handler;
+        projection_ptr projection_handler;
 
         static bool created_opengl;
     };

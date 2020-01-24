@@ -4,7 +4,6 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/vec4.hpp>
 #include <memory>
 #include <cmath>
 
@@ -18,7 +17,7 @@ void game::run() {
     double time = 0.0;
     std::unique_ptr<texture> sky;
 
-    window w(600, 600, "Window");
+    window w(300, 300, "Window");
 
     w.set_on_start([&sky]() {
         sky = std::make_unique<texture>("./data/1.png");
@@ -38,7 +37,16 @@ void game::run() {
         auto alpha = std::sin((float) time) * 0.5f + 0.5f;
         auto rect_color = glm::vec4(0.5f, alpha, 0.9f, 1.0f);
 
-        r.draw_rect(rect(-0.4f, -0.4f, 0.6f, 0.6f), rect_color);
-        r.draw_rect(rect(-0.6f, -0.6f, 0.0f, 0.0f), *sky);
+        auto r1 = rect(50.0f, 50.0f, 250.0f, 250.0f);
+        r.draw_rect(r1, rect_color);
+
+        for (int i = 0; i < 12; ++i) {
+            float step = 26.f;
+            auto r2 = rect(-10.0f + float(i) * step, 40.0f, 10.0f + float(i) * step, 60.0f);
+
+            if (r1.intersect_rect(r2)) {
+                r.draw_rect(r2, *sky);
+            }
+        }
     });
 }

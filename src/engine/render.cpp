@@ -3,6 +3,7 @@
 
 #include <GL/glew.h>
 #include <stdexcept>
+#include <iostream>
 
 using namespace engine;
 
@@ -20,15 +21,19 @@ render::render(const window &win) {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    glDisable(GL_DEPTH_TEST);
+    glDisable(GL_CULL_FACE);
+
     created_opengl = true;
 
     const char *vs = game_config::get().get_vertex_shader().c_str();
     const char *fs = game_config::get().get_fragment_shader().c_str();
 
     shader_handler = std::make_unique<shader>(vs, fs);
-
     rect_render_handler = std::make_unique<rect_render>(0, 1);
+    projection_handler = std::make_unique<projection>((float) width, (float) height);
 
+    init_render();
     check_errors();
 }
 
@@ -107,4 +112,11 @@ void render::draw_rect(rect r, const texture &sprite) const {
     rect_render_handler->draw(r);
 
     check_errors();
+}
+
+void render::init_render() {
+    shader_handler->use();
+
+    GLint projection_index = shader_handler->get_index("projection");
+    shader_handler->set_uniform(projection_index, projection_handler->get_mat());
 }
