@@ -4,11 +4,8 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-#include <glm/vec4.hpp>
-#include <glm/vec2.hpp>
 #include <memory>
 #include <cmath>
-#include <iostream>
 
 #include "engine/window.h"
 #include "engine/render.h"
@@ -48,14 +45,14 @@ void game::run() {
         r.draw_rect(r1, rect_color);
 
         for (int i = 0; i < 12; ++i) {
-            float step = 26.f;
-            auto r2 = rect(-10.0f + float(i) * step, 40.0f, 10.0f + float(i) * step, 60.0f);
+            float step = 25.f;
+            auto r2 = rect(-10.0f + float(i) * step, 90.0f, 10.0f + float(i) * step, 110.0f);
 
             if (r1.intersect_rect(r2)) {
                 r.draw_rect(r2, *sky);
             }
         }
 
-        r.print(glm::vec2(0.0f, 150.0f), "HELLO, KITTY!");
+        r.print(glm::vec2(20.0f, 120.0f + alpha * 50.0f), "HELLO, KITTY!");
     });
 }

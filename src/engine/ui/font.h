@@ -15,7 +15,7 @@ namespace engine {
 
             font &operator=(font) = delete;
 
-            void print(const engine::render& r, glm::vec2 pos, const char *text) const;
+            void print(const engine::render &r, glm::vec2 pos, const char *text) const;
 
         private:
             texture font_texture;

@@ -13,8 +13,6 @@ font::font() :
 }
 
 void font::print(const engine::render &r, glm::vec2 pos, const char *text) const {
-    font_texture.bind(0);
-
     int count = 0;
     for (const char *it = text; *it != '\0'; ++it) {
         int n = (int) *it;

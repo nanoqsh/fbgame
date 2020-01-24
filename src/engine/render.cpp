@@ -1,5 +1,4 @@
 #include "render.h"
-#include "../game_config.h"
 
 #include <GL/glew.h>
 #include <stdexcept>
@@ -109,6 +108,9 @@ void render::draw_rect(rect r, const texture &sprite, rect st_map) const {
     GLint sprite_index = shader_handler->get_index("img");
     shader_handler->set_uniform(sprite_index, SPRITE_UNIT);
 
+    GLint rect_color = shader_handler->get_index("rect_color");
+    shader_handler->set_uniform(rect_color, glm::vec4(1.0f));
+
     sprite.bind(SPRITE_UNIT);
     rect_render_handler->draw(r, st_map);
 
@@ -124,9 +126,6 @@ void render::init_render() {
 
 void render::print(glm::vec2 pos, const char *text) const {
     shader_handler->use();
-
-    GLint sprite_index = shader_handler->get_index("img");
-    shader_handler->set_uniform(sprite_index, 0);
 
     font_handler->print(*this, pos, text);
 }
