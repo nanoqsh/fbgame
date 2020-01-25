@@ -158,7 +158,7 @@ void window::mouse_click_callback(GLFWwindow *window_ptr, int mouse_button, int 
         if (b.is_enable() && b.get_bounds().intersect_point(user_x, user_y)) {
             if (action == GLFW_RELEASE && mouse_button == GLFW_MOUSE_BUTTON_LEFT) {
                 b.set_state(button_state::HOVER);
-                b.click();
+                b.click(*self);
             } else if (action == GLFW_PRESS && mouse_button == GLFW_MOUSE_BUTTON_LEFT) {
                 b.set_state(button_state::ACTIVE);
             }

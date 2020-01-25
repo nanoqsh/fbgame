@@ -47,6 +47,16 @@ game_config::game_config() {
     fragment_shader = load_string("fragment_shader", config, "shaders/def.fs.glsl");
     font = load_string("font", config, "data/font/0.png");
 
+    buttons = {
+            load_string("button_normal", config, "data/button_normal.png"),
+            load_string("button_hover", config, "data/button_hover.png"),
+            load_string("button_active", config, "data/button_active.png")
+    };
+
+    bird = load_string("bird", config, "data/bird.png");
+    back = load_string("back", config, "data/back.png");
+    tube = load_string("tube", config, "data/tube.png");
+
     std::string font_file_path = load_string("font_config", config, "data/font/font.yaml");
     std::ifstream font_file;
     font_file.open(font_file_path);
@@ -94,4 +104,20 @@ const std::string &game_config::get_font() const {
 
 const font_config &game_config::get_font_config() const {
     return font_data;
+}
+
+const button_textures &game_config::get_button_textures() const {
+    return buttons;
+}
+
+const std::string &game_config::get_bird() const {
+    return bird;
+}
+
+const std::string &game_config::get_back() const {
+    return back;
+}
+
+const std::string &game_config::get_tube() const {
+    return tube;
 }

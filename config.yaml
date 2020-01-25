@@ -3,3 +3,11 @@ vertex_shader: 'shaders/def.vs.glsl'
 fragment_shader: 'shaders/def.fs.glsl'
 font: 'data/font/0.png'
 font_config: 'data/font/font.yaml'
+
+button_normal: 'data/button_normal.png'
+button_hover: 'data/button_hover.png'
+button_active: 'data/button_active.png'
+
+bird: 'data/bird.png'
+back: 'data/back.png'
+tube: 'data/tube.png'

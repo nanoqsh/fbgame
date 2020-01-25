@@ -42,7 +42,7 @@ void font::print(const engine::render &r, glm::vec2 pos, const char *text) const
                 y_pos + char_t
         );
 
-        r.draw_rect(char_rect, font_texture, st_map);
+        r.draw(char_rect, font_texture, st_map);
 
         ++count;
     }

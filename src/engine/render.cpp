@@ -97,7 +97,7 @@ void render::set_color(glm::vec4 color) const {
     shader_handler->set_uniform(rect_color, color);
 }
 
-void render::draw_rect(rect r) const {
+void render::draw(rect r) const {
     shader_handler->use();
 
     GLint mode = shader_handler->get_index("mode");
@@ -108,9 +108,7 @@ void render::draw_rect(rect r) const {
     check_errors();
 }
 
-void render::draw_rect(rect r, const texture &sprite, rect st_map) const {
-    const GLint SPRITE_UNIT = 0;
-
+void render::draw(rect r, const texture &tx, rect st_map) const {
     shader_handler->use();
 
     GLint mode = shader_handler->get_index("mode");
@@ -119,19 +117,15 @@ void render::draw_rect(rect r, const texture &sprite, rect st_map) const {
     GLint sprite_index = shader_handler->get_index("img");
     shader_handler->set_uniform(sprite_index, SPRITE_UNIT);
 
-    sprite.bind(SPRITE_UNIT);
+    tx.bind(SPRITE_UNIT);
     rect_render_handler->draw(r, st_map);
 
     check_errors();
 }
 
-void render::init_render() {
-    shader_handler->use();
-
-    GLint projection_index = shader_handler->get_index("projection");
-    shader_handler->set_uniform(projection_index, projection_handler->get_mat());
-
-    reset_color();
+void render::draw(const texture &tx, float factor) const {
+    auto[width, height] = tx.get_size();
+    draw(rect(0.0, 0.0, width * factor, height * factor), tx);
 }
 
 void render::print(glm::vec2 pos, const char *text) const {
@@ -142,4 +136,13 @@ void render::print(glm::vec2 pos, const char *text) const {
 
 const font &render::get_font() const {
     return *font_handler;
+}
+
+void render::init_render() {
+    shader_handler->use();
+
+    GLint projection_index = shader_handler->get_index("projection");
+    shader_handler->set_uniform(projection_index, projection_handler->get_mat());
+
+    reset_color();
 }

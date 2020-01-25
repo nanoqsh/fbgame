@@ -32,9 +32,11 @@ namespace engine {
 
         void reset_color() const;
 
-        void draw_rect(rect r) const;
+        void draw(rect r) const;
 
-        void draw_rect(rect r, const texture &sprite, rect st_map = rect(0.0f, 0.0f, 1.0f, 1.0f)) const;
+        void draw(rect r, const texture &tx, rect st_map = rect(0.0f, 0.0f, 1.0f, 1.0f)) const;
+
+        void draw(const texture &tx, float factor = 1.0f) const;
 
         void print(glm::vec2 pos, const char *text) const;
 
@@ -42,6 +44,8 @@ namespace engine {
 
     private:
         void init_render();
+
+        const GLint SPRITE_UNIT = 0;
 
         shared_ptr shader_handler;
         rect_render_ptr rect_render_handler;

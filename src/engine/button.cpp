@@ -10,15 +10,13 @@ button::button(
         glm::vec2 pos,
         glm::vec2 size,
         std::string &&text,
-        const texture &normal,
-        const texture &hover,
-        const texture &active
+        texture_set textures,
+        pos_mode mode
 ) :
         size(size),
         text(text),
-        normal(normal),
-        hover(hover),
-        active(active) {
+        textures(textures),
+        mode(mode) {
     this->pos = pos;
 }
 
@@ -35,13 +33,13 @@ void button::draw(const render &r) {
 
     switch (state) {
         case button_state::NORMAL:
-            r.draw_rect(bounds, normal);
+            r.draw(bounds, textures.normal);
             break;
         case button_state::ACTIVE:
-            r.draw_rect(bounds, active);
+            r.draw(bounds, textures.active);
             break;
         case button_state::HOVER:
-            r.draw_rect(bounds, hover);
+            r.draw(bounds, textures.hover);
             break;
     }
 
@@ -51,7 +49,7 @@ void button::draw(const render &r) {
             (size.y - text_size.y) * 0.5f
     );
 
-    r.print(pos + text_pos + text_offsets[(size_t) state], text.c_str());
+    r.print(bounds.left_bottom + text_pos + text_offsets[(size_t) state], text.c_str());
 }
 
 void button::set_state(button_state s) {
@@ -67,16 +65,21 @@ void button::set_text_offset(glm::vec2 offset, button_state s) {
 }
 
 rect button::get_bounds() const {
-    return rect(pos, pos + size);
+    if (mode == pos_mode::LEFT_BOTTOM) {
+        return rect(pos, pos + size);
+    } else {
+        glm::vec2 half_size = size * 0.5f;
+        return rect(pos - half_size, pos + half_size);
+    }
 }
 
 void button::set_on_click(button::on_click &&click) {
     on_click_fn = click;
 }
 
-void button::click() {
+void button::click(window &w) {
     if (on_click_fn) {
-        on_click_fn(*this);
+        on_click_fn(*this, w);
     }
 }
 
@@ -87,3 +90,12 @@ void button::set_text(std::string &&t) {
 const std::string &button::get_text() const {
     return text;
 }
+
+texture_set::texture_set(
+        const texture &normal,
+        const texture &hover,
+        const texture &active
+) :
+        normal(normal),
+        hover(hover),
+        active(active) {}
