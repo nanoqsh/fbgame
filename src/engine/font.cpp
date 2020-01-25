@@ -1,15 +1,19 @@
 #include "font.h"
-#include "../render.h"
-#include "../rect.h"
+#include "render.h"
+#include "rect.h"
 
-using namespace engine::ui;
+using namespace engine;
 
 font::font() :
         font_texture(game_config::get().get_font().c_str()) {
     fc = game_config::get().get_font_config();
+    auto[width, height] = font_texture.get_size();
 
     char_s = 1.0f / (float) fc.width;
     char_t = 1.0f / (float) fc.height;
+
+    unit_x = fc.size / (width / (float) fc.width);
+    unit_y = fc.size / (height / (float) fc.height);
 }
 
 void font::print(const engine::render &r, glm::vec2 pos, const char *text) const {
@@ -41,5 +45,15 @@ void font::print(const engine::render &r, glm::vec2 pos, const char *text) const
         r.draw_rect(char_rect, font_texture, st_map);
 
         ++count;
+    }
+}
+
+glm::vec2 font::get_text_size(size_t len) const {
+    if (len == 0) {
+        return glm::vec2(0.0f, 0.0f);
+    } else if (len == 1) {
+        return glm::vec2(fc.size, fc.size);
+    } else {
+        return glm::vec2(fc.size + (float) (len - 1) * (fc.indent + fc.size), fc.size);
     }
 }

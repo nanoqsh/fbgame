@@ -31,7 +31,7 @@ render::render(const window &win) {
     shader_handler = std::make_unique<shader>(vs, fs);
     rect_render_handler = std::make_unique<rect_render>(0, 1);
     projection_handler = std::make_unique<projection>((float) width, (float) height);
-    font_handler = std::make_unique<ui::font>();
+    font_handler = std::make_unique<font>();
 
     init_render();
     check_errors();
@@ -138,4 +138,8 @@ void render::print(glm::vec2 pos, const char *text) const {
     shader_handler->use();
 
     font_handler->print(*this, pos, text);
+}
+
+const font &render::get_font() const {
+    return *font_handler;
 }

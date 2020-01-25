@@ -6,10 +6,12 @@
 #include <GLFW/glfw3.h>
 #include <memory>
 #include <cmath>
+#include <string>
 
 #include "engine/window.h"
 #include "engine/render.h"
 #include "engine/rect.h"
+#include "engine/button.h"
 
 using namespace engine;
 
@@ -18,14 +20,37 @@ void game::run() {
     std::unique_ptr<texture> sky;
     auto r1 = rect(50.0f, 50.0f, 250.0f, 250.0f);
 
+    std::unique_ptr<texture> button_normal;
+    std::unique_ptr<texture> button_hover;
+    std::unique_ptr<texture> button_active;
+    std::unique_ptr<button> but;
+
     window w(300, 300, "Window");
 
-    w.set_on_mouse_move([&r1](window &w, float x, float y) {
+    w.set_on_mouse_move([&r1, &but](window &w, float x, float y) {
         //
     });
 
-    w.set_on_start([&sky]() {
+    w.set_on_start([&sky, &button_normal, &button_hover, &button_active, &but](window &w) {
         sky = std::make_unique<texture>("./data/1.png");
+
+        button_normal = std::make_unique<texture>("./data/button_normal.png");
+        button_hover = std::make_unique<texture>("./data/button_hover.png");
+        button_active = std::make_unique<texture>("./data/button_active.png");
+        but = std::make_unique<button>(
+                glm::vec2(20.0f, 200.0f),
+                glm::vec2(128.0f, 32.0f),
+                std::string("START"),
+                *button_normal,
+                *button_hover,
+                *button_active
+        );
+        but->set_text_offset(glm::vec2(0.0f, -2.0f), button_state::ACTIVE);
+        but->set_on_press([&but]() {
+            but->set_enable(false);
+        });
+
+        w.add_button(*but);
     });
 
     w.set_on_keypress([](window &w, const input &in) {
@@ -34,7 +59,7 @@ void game::run() {
         }
     });
 
-    w.run([&time, &sky, &r1](const render &r, double delta_time) {
+    w.run([&time, &sky, &r1, &but](const render &r, double delta_time) {
         r.clear_color(glm::vec4(0.2f, 0.3f, 0.3f, 1.0f));
 
         time += delta_time;

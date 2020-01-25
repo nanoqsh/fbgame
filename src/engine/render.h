@@ -9,14 +9,14 @@
 #include "rect_render.h"
 #include "texture.h"
 #include "projection.h"
-#include "ui/font.h"
+#include "font.h"
 
 namespace engine {
     struct render {
         using shared_ptr = std::unique_ptr<shader>;
         using rect_render_ptr = std::unique_ptr<rect_render>;
         using projection_ptr = std::unique_ptr<projection>;
-        using font_ptr = std::unique_ptr<ui::font>;
+        using font_ptr = std::unique_ptr<font>;
 
         explicit render(const window &win);
 
@@ -37,6 +37,8 @@ namespace engine {
         void draw_rect(rect r, const texture &sprite, rect st_map = rect(0.0f, 0.0f, 1.0f, 1.0f)) const;
 
         void print(glm::vec2 pos, const char *text) const;
+
+        const font &get_font() const;
 
     private:
         void init_render();

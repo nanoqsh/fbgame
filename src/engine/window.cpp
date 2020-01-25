@@ -63,8 +63,19 @@ void window::run(window::on_update &&update) {
                 auto[_, height] = self->get_framebuffer_size();
                 (void) _;
 
+                auto user_x = (float) x_pos;
+                auto user_y = (float) (height - 1) - (float) y_pos;
+
+                for (button &b: self->buttons) {
+                    if (b.get_bounds().intersect_point(user_x, user_y)) {
+                        b.set_state(button_state::HOVER);
+                    } else {
+                        b.set_state(button_state::NORMAL);
+                    }
+                }
+
                 if (self->mouse_move_fn) {
-                    self->mouse_move_fn(*self, (float) x_pos, (float) (height - 1) - (float) y_pos);
+                    self->mouse_move_fn(*self, user_x, user_y);
                 }
             }
     );
@@ -83,11 +94,12 @@ void window::run(window::on_update &&update) {
     double last_time = glfwGetTime();
     double delta_time = 0;
 
-    start_fn();
+    start_fn(*this);
 
     while (!glfwWindowShouldClose(window_handler.get())) {
         glfwPollEvents();
         update(*render_handler.get(), delta_time);
+        render_actors();
         glfwSwapBuffers(window_handler.get());
 
         double current_time = glfwGetTime();
@@ -103,4 +115,17 @@ std::pair<int, int> window::get_framebuffer_size() const {
     int width, height;
     glfwGetFramebufferSize(window_handler.get(), &width, &height);
     return std::pair<int, int>(width, height);
+}
+
+void window::add_button(button &b) {
+    buttons.emplace_back(b);
+    actors.emplace_back(b);
+}
+
+void window::render_actors() {
+    for (actor &a: actors) {
+        if (a.is_enable() && a.is_visible()) {
+            a.draw(*render_handler);
+        }
+    }
 }
