@@ -1,11 +1,14 @@
 #pragma once
 
 struct game {
-    game() = delete;
+    game();
 
     game(const game &) = delete;
 
     game &operator=(game) = delete;
 
-    static void run();
+    void run();
+
+private:
+    size_t score;
 };

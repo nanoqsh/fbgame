@@ -58,6 +58,10 @@ void button::set_state(button_state s) {
     state = s;
 }
 
+button_state button::get_state() const {
+    return state;
+}
+
 void button::set_text_offset(glm::vec2 offset, button_state s) {
     text_offsets[(size_t) s] = offset;
 }

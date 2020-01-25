@@ -34,6 +34,8 @@ namespace engine {
 
         void set_state(button_state state);
 
+        button_state get_state() const;
+
         void set_text_offset(glm::vec2 offset, button_state state);
 
         rect get_bounds() const;

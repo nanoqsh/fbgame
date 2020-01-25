@@ -18,6 +18,7 @@ add_executable(fbgame
         src/game.cpp
         src/game.h
         src/path.h
+        src/score.h
         )
 
 

@@ -2,6 +2,7 @@
 
 #include <stdexcept>
 #include "render.h"
+#include "timer.h"
 
 using namespace engine;
 
@@ -56,27 +57,39 @@ void window::set_on_mouse_click(window::on_mouse_click &&mouse_click) {
     mouse_click_fn = mouse_click;
 }
 
+void window::set_on_close(window::on_close &&close) {
+    close_fn = close;
+}
+
 void window::run(window::on_update &&update) {
     glfwSetWindowUserPointer(window_handler.get(), this);
 
+    // set callback events
     glfwSetCursorPosCallback(window_handler.get(), mouse_move_callback);
     glfwSetMouseButtonCallback(window_handler.get(), mouse_click_callback);
     glfwSetKeyCallback(window_handler.get(), key_callback);
 
-    double last_time = glfwGetTime();
-    double delta_time = 0;
+    if (start_fn) {
+        start_fn(*this);
+    }
 
-    start_fn(*this);
+    // timer for delta_time counting
+    timer time;
 
+    // main loop
     while (!glfwWindowShouldClose(window_handler.get())) {
         glfwPollEvents();
-        update(*render_handler.get(), delta_time);
+
+        update(*render_handler.get(), time.get_delta_time());
         render_actors();
+
         glfwSwapBuffers(window_handler.get());
 
-        double current_time = glfwGetTime();
-        delta_time = current_time - last_time;
-        last_time = current_time;
+        time.update();
+    }
+
+    if (close_fn) {
+        close_fn(*this);
     }
 
     glfwSetKeyCallback(window_handler.get(), nullptr);
@@ -114,7 +127,9 @@ void window::mouse_move_callback(GLFWwindow *window_ptr, double x_pos, double y_
 
     for (button &b: self->buttons) {
         if (b.is_enable() && b.get_bounds().intersect_point(user_x, user_y)) {
-            b.set_state(button_state::HOVER);
+            if (b.get_state() != button_state::ACTIVE) {
+                b.set_state(button_state::HOVER);
+            }
         } else {
             b.set_state(button_state::NORMAL);
         }
@@ -126,7 +141,6 @@ void window::mouse_move_callback(GLFWwindow *window_ptr, double x_pos, double y_
 }
 
 void window::mouse_click_callback(GLFWwindow *window_ptr, int mouse_button, int action, int mods) {
-    (void) mouse_button;
     (void) mods;
 
     auto *self = static_cast<window *>(glfwGetWindowUserPointer(window_ptr));
@@ -142,10 +156,10 @@ void window::mouse_click_callback(GLFWwindow *window_ptr, int mouse_button, int 
 
     for (button &b: self->buttons) {
         if (b.is_enable() && b.get_bounds().intersect_point(user_x, user_y)) {
-            if (action == GLFW_RELEASE) {
+            if (action == GLFW_RELEASE && mouse_button == GLFW_MOUSE_BUTTON_LEFT) {
                 b.set_state(button_state::HOVER);
                 b.click();
-            } else if (action == GLFW_PRESS) {
+            } else if (action == GLFW_PRESS && mouse_button == GLFW_MOUSE_BUTTON_LEFT) {
                 b.set_state(button_state::ACTIVE);
             }
         }

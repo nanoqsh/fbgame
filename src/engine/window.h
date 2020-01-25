@@ -30,6 +30,7 @@ namespace engine {
         using on_keypress = std::function<void(window &, const input &)>;
         using on_mouse_move = std::function<void(window &, float x, float y)>;
         using on_mouse_click = std::function<void(window &, float x, float y)>;
+        using on_close = std::function<void(window &)>;
 
         window(int width, int height, const char *title, bool vsync = true);
 
@@ -44,6 +45,8 @@ namespace engine {
         void set_on_mouse_move(on_mouse_move &&mouse_move);
 
         void set_on_mouse_click(on_mouse_click &&mouse_click);
+
+        void set_on_close(on_close &&close);
 
         void run(on_update &&update);
 
@@ -69,6 +72,7 @@ namespace engine {
         on_keypress keypress_fn;
         on_mouse_move mouse_move_fn;
         on_mouse_click mouse_click_fn;
+        on_close close_fn;
 
         std::vector<std::reference_wrapper<button>> buttons;
         std::vector<std::reference_wrapper<actor>> actors;

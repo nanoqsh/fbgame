@@ -6,14 +6,17 @@
 #include <GLFW/glfw3.h>
 #include <memory>
 #include <cmath>
-#include <string>
 
 #include "engine/window.h"
 #include "engine/render.h"
 #include "engine/rect.h"
 #include "engine/button.h"
+#include "score.h"
 
 using namespace engine;
+
+game::game() :
+        score(score::load()) {}
 
 void game::run() {
     double time = 0.0;
@@ -27,11 +30,11 @@ void game::run() {
 
     window w(300, 300, "Window");
 
-    w.set_on_mouse_move([&r1, &but](window &w, float x, float y) {
+    w.set_on_mouse_move([](window &w, float x, float y) {
         //
     });
 
-    w.set_on_start([&sky, &button_normal, &button_hover, &button_active, &but](window &w) {
+    w.set_on_start([&](window &w) {
         sky = std::make_unique<texture>("./data/1.png");
 
         button_normal = std::make_unique<texture>("./data/button_normal.png");
@@ -46,8 +49,12 @@ void game::run() {
                 *button_active
         );
         but->set_text_offset(glm::vec2(0.0f, -2.0f), button_state::ACTIVE);
-        but->set_on_click([](button &self) {
+        but->set_on_click([this](button &self) {
             self.set_text("run!@#");
+
+            size_t new_score = 27;
+            this->score = new_score;
+            score::save(new_score);
         });
 
         w.add_button(*but);
@@ -59,7 +66,7 @@ void game::run() {
         }
     });
 
-    w.run([&time, &sky, &r1, &but](const render &r, double delta_time) {
+    w.run([&](const render &r, double delta_time) {
         r.clear_color(glm::vec4(0.2f, 0.3f, 0.3f, 1.0f));
 
         time += delta_time;
@@ -80,7 +87,10 @@ void game::run() {
             }
         }
 
+        std::stringstream ss;
+        ss << "HELLO, KITTY! " << score;
+
         r.set_color(glm::vec4(alpha, 1.0f, 1.0f - alpha, 1.0f));
-        r.print(glm::vec2(20.0f, 120.0f + alpha * 50.0f), "HELLO, KITTY!");
+        r.print(glm::vec2(20.0f, 120.0f + alpha * 50.0f), ss.str().c_str());
     });
 }
