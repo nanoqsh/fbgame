@@ -9,13 +9,13 @@ using namespace engine;
 button::button(
         glm::vec2 pos,
         glm::vec2 size,
-        std::string text,
+        std::string &&text,
         const texture &normal,
         const texture &hover,
         const texture &active
 ) :
         size(size),
-        text(std::move(text)),
+        text(text),
         normal(normal),
         hover(hover),
         active(active) {
@@ -66,6 +66,20 @@ rect button::get_bounds() const {
     return rect(pos, pos + size);
 }
 
-void button::set_on_press(button::on_press &&press) {
-    on_press_fn = press;
+void button::set_on_click(button::on_click &&click) {
+    on_click_fn = click;
+}
+
+void button::click() {
+    if (on_click_fn) {
+        on_click_fn(*this);
+    }
+}
+
+void button::set_text(std::string &&t) {
+    text = t;
+}
+
+const std::string &button::get_text() const {
+    return text;
 }

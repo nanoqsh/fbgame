@@ -29,6 +29,7 @@ namespace engine {
         using on_update = std::function<void(const render &, double delta_time)>;
         using on_keypress = std::function<void(window &, const input &)>;
         using on_mouse_move = std::function<void(window &, float x, float y)>;
+        using on_mouse_click = std::function<void(window &, float x, float y)>;
 
         window(int width, int height, const char *title, bool vsync = true);
 
@@ -42,6 +43,8 @@ namespace engine {
 
         void set_on_mouse_move(on_mouse_move &&mouse_move);
 
+        void set_on_mouse_click(on_mouse_click &&mouse_click);
+
         void run(on_update &&update);
 
         void set_should_close();
@@ -53,12 +56,19 @@ namespace engine {
     private:
         void render_actors();
 
+        static void mouse_move_callback(GLFWwindow *window_ptr, double x_pos, double y_pos);
+
+        static void mouse_click_callback(GLFWwindow *window_ptr, int mouse_button, int action, int mods);
+
+        static void key_callback(GLFWwindow *window_ptr, int key, int scancode, int action, int mode);
+
         window_ptr window_handler;
         render_ptr render_handler;
 
         on_start start_fn;
         on_keypress keypress_fn;
         on_mouse_move mouse_move_fn;
+        on_mouse_click mouse_click_fn;
 
         std::vector<std::reference_wrapper<button>> buttons;
         std::vector<std::reference_wrapper<actor>> actors;

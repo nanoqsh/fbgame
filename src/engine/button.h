@@ -15,12 +15,12 @@ namespace engine {
     };
 
     struct button : public actor {
-        using on_press = std::function<void()>;
+        using on_click = std::function<void(button &)>;
 
         button(
                 glm::vec2 pos,
                 glm::vec2 size,
-                std::string text,
+                std::string &&text,
                 const texture &normal,
                 const texture &hover,
                 const texture &active
@@ -38,7 +38,13 @@ namespace engine {
 
         rect get_bounds() const;
 
-        void set_on_press(on_press&& press);
+        void set_on_click(on_click &&click);
+
+        void click();
+
+        void set_text(std::string &&text);
+
+        const std::string &get_text() const;
 
     private:
         button_state state = button_state::NORMAL;
@@ -50,6 +56,6 @@ namespace engine {
 
         glm::vec2 text_offsets[3]{};
 
-        on_press on_press_fn;
+        on_click on_click_fn;
     };
 }

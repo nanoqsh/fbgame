@@ -40,14 +40,14 @@ void game::run() {
         but = std::make_unique<button>(
                 glm::vec2(20.0f, 200.0f),
                 glm::vec2(128.0f, 32.0f),
-                std::string("START"),
+                "START",
                 *button_normal,
                 *button_hover,
                 *button_active
         );
         but->set_text_offset(glm::vec2(0.0f, -2.0f), button_state::ACTIVE);
-        but->set_on_press([&but]() {
-            but->set_enable(false);
+        but->set_on_click([](button &self) {
+            self.set_text("run!@#");
         });
 
         w.add_button(*but);
