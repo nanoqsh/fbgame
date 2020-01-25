@@ -17,6 +17,9 @@ render::render(const window &win) {
     auto[width, height] = win.get_framebuffer_size();
     glViewport(0, 0, width, height);
 
+    this->width = width;
+    this->height = height;
+
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -128,6 +131,16 @@ void render::draw(const texture &tx, float factor) const {
     draw(rect(0.0, 0.0, width * factor, height * factor), tx);
 }
 
+void render::draw_back(const texture &tx) const {
+    auto[width, height] = tx.get_size();
+
+    if (width < height) {
+        draw(get_bounds(), tx, rect(0.0f, 0.0f, (float) height / (float) width, 1.0f));
+    } else {
+        draw(get_bounds(), tx, rect(0.0f, 0.0f, 1.0f, (float) width / (float) height));
+    }
+}
+
 void render::print(glm::vec2 pos, const char *text) const {
     shader_handler->use();
 
@@ -145,4 +158,12 @@ void render::init_render() {
     shader_handler->set_uniform(projection_index, projection_handler->get_mat());
 
     reset_color();
+}
+
+std::pair<int, int> render::get_size() const {
+    return std::make_pair(width, height);
+}
+
+rect render::get_bounds() const {
+    return rect(0.0f, 0.0f, (float) width, (float) height);
 }

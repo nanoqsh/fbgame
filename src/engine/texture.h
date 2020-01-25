@@ -2,10 +2,11 @@
 
 #include <GL/glew.h>
 #include <utility>
+#include <string>
 
 namespace engine {
     struct texture {
-        explicit texture(const char *file);
+        explicit texture(std::string file);
 
         ~texture();
 
@@ -18,8 +19,13 @@ namespace engine {
         std::pair<int, int> get_size() const;
 
     private:
-        GLuint texture_handler = 0;
-        int width = 0;
-        int height = 0;
+        void init() const;
+
+        std::string file;
+        mutable bool initialized = false;
+
+        mutable GLuint texture_handler = 0;
+        mutable int width = 0;
+        mutable int height = 0;
     };
 }

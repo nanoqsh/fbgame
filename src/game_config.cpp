@@ -48,14 +48,14 @@ game_config::game_config() {
     font = load_string("font", config, "data/font/0.png");
 
     buttons = {
-            load_string("button_normal", config, "data/button_normal.png"),
-            load_string("button_hover", config, "data/button_hover.png"),
-            load_string("button_active", config, "data/button_active.png")
+            load_string("button_textures.normal", config, "data/button_normal.png"),
+            load_string("button_textures.hover", config, "data/button_hover.png"),
+            load_string("button_textures.active", config, "data/button_active.png")
     };
 
-    bird = load_string("bird", config, "data/bird.png");
-    back = load_string("back", config, "data/back.png");
-    tube = load_string("tube", config, "data/tube.png");
+    bird = load_string("sprites.bird", config, "data/bird.png");
+    back = load_string("sprites.back", config, "data/back.png");
+    tube = load_string("sprites.tube", config, "data/tube.png");
 
     std::string font_file_path = load_string("font_config", config, "data/font/font.yaml");
     std::ifstream font_file;

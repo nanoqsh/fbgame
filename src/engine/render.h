@@ -38,9 +38,15 @@ namespace engine {
 
         void draw(const texture &tx, float factor = 1.0f) const;
 
+        void draw_back(const texture &tx) const;
+
         void print(glm::vec2 pos, const char *text) const;
 
         const font &get_font() const;
+
+        std::pair<int, int> get_size() const;
+
+        rect get_bounds() const;
 
     private:
         void init_render();
@@ -53,5 +59,8 @@ namespace engine {
         font_ptr font_handler;
 
         static bool created_opengl;
+
+        int width = 0;
+        int height = 0;
     };
 }

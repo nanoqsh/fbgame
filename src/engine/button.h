@@ -25,12 +25,6 @@ namespace engine {
         const texture &normal;
         const texture &hover;
         const texture &active;
-
-        texture_set(
-                const texture &normal,
-                const texture &hover,
-                const texture &active
-        );
     };
 
     struct button : public actor {

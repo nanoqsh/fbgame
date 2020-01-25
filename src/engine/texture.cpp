@@ -3,14 +3,42 @@
 #include "render.h"
 
 #include <stdexcept>
+#include <utility>
 #include <soil/SOIL.h>
 
 using namespace engine;
 
-texture::texture(const char *file) {
-    files::check_existence(file);
+texture::texture(std::string file):
+    file(std::move(file))
+{}
 
-    uint8_t *image = SOIL_load_image(file, &width, &height, nullptr, SOIL_LOAD_RGBA);
+texture::~texture() {
+    if (initialized) {
+        glDeleteTextures(1, &texture_handler);
+    }
+}
+
+void texture::bind(GLint unit) const {
+    if (!initialized) {
+        init();
+    }
+
+    glActiveTexture(GL_TEXTURE0 + unit);
+    glBindTexture(GL_TEXTURE_2D, texture_handler);
+}
+
+std::pair<int, int> texture::get_size() const {
+    if (!initialized) {
+        init();
+    }
+
+    return std::pair<int, int>(width, height);
+}
+
+void texture::init() const {
+    files::check_existence(file.c_str());
+
+    uint8_t *image = SOIL_load_image(file.c_str(), &width, &height, nullptr, SOIL_LOAD_RGBA);
 
     if (!image) {
         std::string message("image loading error: ");
@@ -33,17 +61,6 @@ texture::texture(const char *file) {
     glBindTexture(GL_TEXTURE_2D, 0);
 
     render::check_errors();
-}
 
-texture::~texture() {
-    glDeleteTextures(1, &texture_handler);
-}
-
-void texture::bind(GLint unit) const {
-    glActiveTexture(GL_TEXTURE0 + unit);
-    glBindTexture(GL_TEXTURE_2D, texture_handler);
-}
-
-std::pair<int, int> texture::get_size() const {
-    return std::pair<int, int>(width, height);
+    initialized = true;
 }

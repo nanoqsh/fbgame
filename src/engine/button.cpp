@@ -90,12 +90,3 @@ void button::set_text(std::string &&t) {
 const std::string &button::get_text() const {
     return text;
 }
-
-texture_set::texture_set(
-        const texture &normal,
-        const texture &hover,
-        const texture &active
-) :
-        normal(normal),
-        hover(hover),
-        active(active) {}

@@ -26,7 +26,7 @@ namespace engine {
         using window_ptr = std::unique_ptr<GLFWwindow, void (*)(GLFWwindow *)>;
         using render_ptr = std::unique_ptr<render>;
         using on_start = std::function<void(window &)>;
-        using on_update = std::function<void(const render &, double delta_time)>;
+        using on_update = std::function<void(window &, const render &, double delta_time)>;
         using on_keypress = std::function<void(window &, const input &)>;
         using on_mouse_move = std::function<void(window &, float x, float y)>;
         using on_mouse_click = std::function<void(window &, float x, float y)>;
@@ -38,17 +38,17 @@ namespace engine {
 
         window &operator=(window) = delete;
 
-        void set_on_start(on_start &&start);
+        void set_on_start(on_start start);
 
-        void set_on_keypress(on_keypress &&keypress);
+        void set_on_keypress(on_keypress keypress);
 
-        void set_on_mouse_move(on_mouse_move &&mouse_move);
+        void set_on_mouse_move(on_mouse_move mouse_move);
 
-        void set_on_mouse_click(on_mouse_click &&mouse_click);
+        void set_on_mouse_click(on_mouse_click mouse_click);
 
-        void set_on_close(on_close &&close);
+        void set_on_close(on_close close);
 
-        void run(on_update &&update);
+        void run(const on_update& update);
 
         void set_should_close();
 

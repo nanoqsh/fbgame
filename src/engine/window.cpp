@@ -1,6 +1,7 @@
 #include "window.h"
 
 #include <stdexcept>
+#include <utility>
 #include "render.h"
 #include "timer.h"
 
@@ -41,27 +42,27 @@ void window::set_should_close() {
     glfwSetWindowShouldClose(window_handler.get(), GL_TRUE);
 }
 
-void window::set_on_start(window::on_start &&start) {
-    start_fn = start;
+void window::set_on_start(window::on_start start) {
+    start_fn = std::move(start);
 }
 
-void window::set_on_keypress(window::on_keypress &&keypress) {
-    keypress_fn = keypress;
+void window::set_on_keypress(window::on_keypress keypress) {
+    keypress_fn = std::move(keypress);
 }
 
-void window::set_on_mouse_move(window::on_mouse_move &&mouse_move) {
-    mouse_move_fn = mouse_move;
+void window::set_on_mouse_move(window::on_mouse_move mouse_move) {
+    mouse_move_fn = std::move(mouse_move);
 }
 
-void window::set_on_mouse_click(window::on_mouse_click &&mouse_click) {
-    mouse_click_fn = mouse_click;
+void window::set_on_mouse_click(window::on_mouse_click mouse_click) {
+    mouse_click_fn = std::move(mouse_click);
 }
 
-void window::set_on_close(window::on_close &&close) {
-    close_fn = close;
+void window::set_on_close(window::on_close close) {
+    close_fn = std::move(close);
 }
 
-void window::run(window::on_update &&update) {
+void window::run(const window::on_update& update) {
     glfwSetWindowUserPointer(window_handler.get(), this);
 
     // set callback events
@@ -80,7 +81,7 @@ void window::run(window::on_update &&update) {
     while (!glfwWindowShouldClose(window_handler.get())) {
         glfwPollEvents();
 
-        update(*render_handler.get(), time.get_delta_time());
+        update(*this, *render_handler.get(), time.get_delta_time());
         render_actors();
 
         glfwSwapBuffers(window_handler.get());
