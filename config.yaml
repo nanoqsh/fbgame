@@ -2,6 +2,8 @@
 vertex_shader: 'shaders/def.vs.glsl'
 fragment_shader: 'shaders/def.fs.glsl'
 
+show_colliders: false
+
 font: 'data/font/0.png'
 font_config: 'data/font/font.yaml'
 

@@ -3,15 +3,23 @@ project(fbgame)
 
 set(CMAKE_CXX_STANDARD 17)
 
+
 set(engine_dir ${CMAKE_CURRENT_SOURCE_DIR}/src/engine)
 file(GLOB engine
         ${engine_dir}/*.cpp
         ${engine_dir}/*.h
         )
 
+set(fb_dir ${CMAKE_CURRENT_SOURCE_DIR}/src/fb)
+file(GLOB fb
+        ${fb_dir}/*.cpp
+        ${fb_dir}/*.h
+        )
+
 
 add_executable(fbgame
         ${engine}
+        ${fb}
         src/main.cpp
         src/game_config.cpp
         src/game_config.h

@@ -38,6 +38,8 @@ struct game_config {
 
     const std::string &get_tube() const;
 
+    bool get_show_colliders() const;
+
 private:
     game_config();
 
@@ -51,4 +53,6 @@ private:
     std::string bird;
     std::string back;
     std::string tube;
+
+    bool show_colliders = false;
 };

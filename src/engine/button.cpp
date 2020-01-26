@@ -52,6 +52,8 @@ void button::draw(const render &r) {
     r.print(bounds.left_bottom + text_pos + text_offsets[(size_t) state], text.c_str());
 }
 
+void button::update(double) {}
+
 void button::set_state(button_state s) {
     state = s;
 }

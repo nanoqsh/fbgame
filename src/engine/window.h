@@ -54,7 +54,7 @@ namespace engine {
 
         std::pair<int, int> get_framebuffer_size() const;
 
-        void add_button(button &b);
+        void add_actor(actor &a);
 
     private:
         void render_actors();

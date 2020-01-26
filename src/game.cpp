@@ -10,13 +10,14 @@
 #include "engine/render.h"
 #include "engine/button.h"
 #include "score.h"
+#include "fb/game_object.h"
 
 using namespace engine;
+using namespace fb;
 
 game::game() :
         score(score::load()),
-        config(game_config::get())
-        {}
+        config(game_config::get()) {}
 
 void game::run() {
     texture back(config.get_back());
@@ -32,22 +33,32 @@ void game::run() {
             active
     };
 
-    std::unique_ptr<button> but;
-    std::unique_ptr<button> but2;
+    std::unique_ptr<button> start_button;
+    std::unique_ptr<button> quit_button;
+
+    texture bird_texture(config.get_bird());
+    game_object bird(
+            glm::vec2(300.0f, 256.0f),
+            glm::vec2(36.0f, 36.0f),
+            glm::vec2(36.0f, 36.0f),
+            bird_texture
+    );
+
+    bird.set_weight(8.0f);
 
     int factor = 2;
     window w(300 * factor, 256 * factor, "Window");
 
     w.set_on_start([&](window &w) {
-        but = std::make_unique<button>(
+        start_button = std::make_unique<button>(
                 glm::vec2(300.0f, 256.0f),
                 glm::vec2(128.0f, 32.0f),
                 "START",
                 button_textures_set
         );
-        but->set_text_offset(glm::vec2(0.0f, -2.0f), button_state::ACTIVE);
+        start_button->set_text_offset(glm::vec2(0.0f, -2.0f), button_state::ACTIVE);
 
-        but->set_on_click([this](button &self, window &) {
+        start_button->set_on_click([this](button &self, window &) {
             self.set_text("run!@#");
 
             size_t new_score = 27;
@@ -55,23 +66,32 @@ void game::run() {
             score::save(new_score);
         });
 
-        but2 = std::make_unique<button>(
+        quit_button = std::make_unique<button>(
                 glm::vec2(300.0f, 216.0f),
                 glm::vec2(128.0f, 32.0f),
                 "QUIT",
                 button_textures_set
         );
-        but2->set_text_offset(glm::vec2(0.0f, -2.0f), button_state::ACTIVE);
+        quit_button->set_text_offset(glm::vec2(0.0f, -2.0f), button_state::ACTIVE);
 
-        but2->set_on_click([this](button &, window &w) {
+        quit_button->set_on_click([this](button &, window &w) {
             w.set_should_close();
         });
 
-        w.add_button(*but);
-        w.add_button(*but2);
+        start_button->set_enable(false);
+        quit_button->set_enable(false);
+
+        w.add_actor(*start_button);
+        w.add_actor(*quit_button);
+
+        w.add_actor(bird);
     });
 
-    w.set_on_keypress([](window &w, const input &in) {
+    w.set_on_keypress([&](window &w, const input &in) {
+        if (in.key == GLFW_KEY_SPACE) {
+            bird.add_velocity(glm::vec2(0.0f, 300.0f));
+        }
+
         if (in.key == GLFW_KEY_ESCAPE) {
             w.set_should_close();
         }

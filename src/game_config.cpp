@@ -16,6 +16,11 @@ static float load_float(const char *key, const YAML::Node &node, float def = 0.0
     return n && n.IsScalar() ? n.as<float>() : def;
 }
 
+static bool load_bool(const char *key, const YAML::Node &node, bool def = false) {
+    YAML::Node n = node[key];
+    return n && n.IsScalar() ? n.as<bool>() : def;
+}
+
 static std::string load_string(const char *key, const YAML::Node &node, const char *def) {
     YAML::Node n = node[key];
     return n && n.IsScalar() ? n.as<std::string>() : std::string(def);
@@ -56,6 +61,8 @@ game_config::game_config() {
     bird = load_string("sprites.bird", config, "data/bird.png");
     back = load_string("sprites.back", config, "data/back.png");
     tube = load_string("sprites.tube", config, "data/tube.png");
+
+    show_colliders = load_bool("bool", config);
 
     std::string font_file_path = load_string("font_config", config, "data/font/font.yaml");
     std::ifstream font_file;
@@ -120,4 +127,8 @@ const std::string &game_config::get_back() const {
 
 const std::string &game_config::get_tube() const {
     return tube;
+}
+
+bool game_config::get_show_colliders() const {
+    return show_colliders;
 }

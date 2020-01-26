@@ -44,6 +44,8 @@ namespace engine {
 
         void draw(const render &r) override;
 
+        void update(double delta_time) override;
+
         void set_state(button_state state);
 
         button_state get_state() const;

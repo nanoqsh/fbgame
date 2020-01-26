@@ -11,6 +11,8 @@ namespace engine {
 
         virtual void draw(const render &r) = 0;
 
+        virtual void update(double delta_time) = 0;
+
         virtual std::unique_ptr<actor> clone();
 
         const glm::vec2 &get_pos() const;

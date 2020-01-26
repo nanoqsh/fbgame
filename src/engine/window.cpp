@@ -81,6 +81,13 @@ void window::run(const window::on_update& update) {
     while (!glfwWindowShouldClose(window_handler.get())) {
         glfwPollEvents();
 
+        // update all actors
+        for (actor &a: actors) {
+            if (a.is_enable()) {
+                a.update(time.get_delta_time());
+            }
+        }
+
         update(*this, *render_handler.get(), time.get_delta_time());
         render_actors();
 
@@ -104,9 +111,13 @@ std::pair<int, int> window::get_framebuffer_size() const {
     return std::pair<int, int>(width, height);
 }
 
-void window::add_button(button &b) {
-    buttons.emplace_back(b);
-    actors.emplace_back(b);
+void window::add_actor(actor &a) {
+    actors.emplace_back(a);
+
+    auto* b = dynamic_cast<button*>(&a);
+    if (b) {
+        buttons.emplace_back(*b);
+    }
 }
 
 void window::render_actors() {
