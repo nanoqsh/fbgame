@@ -21,11 +21,11 @@ namespace fb {
 
         void draw(const engine::render &r) override;
 
-        void update(double delta_time) override;
+        void update(float delta_time) override;
 
         std::unique_ptr<engine::actor> clone() override;
 
-        rect get_collider() const;
+        engine::rect get_collider() const;
 
         const glm::vec2 &get_velocity() const;
 

@@ -40,6 +40,24 @@ struct game_config {
 
     bool get_show_colliders() const;
 
+    const std::string &get_title() const;
+
+    const std::string &get_game_over() const;
+
+    const std::string &get_congratulations() const;
+
+    const std::string &get_about() const;
+
+    float get_tube_step() const;
+
+    float get_bird_speed() const;
+
+    float get_jump_power() const;
+
+    float get_gravity() const;
+
+    float get_distance_range() const;
+
 private:
     game_config();
 
@@ -55,4 +73,15 @@ private:
     std::string tube;
 
     bool show_colliders = false;
+
+    std::string title;
+    std::string game_over;
+    std::string congratulations;
+    std::string about;
+
+    float tube_step = 0.0f;
+    float bird_speed = 0.0f;
+    float jump_power = 0.0f;
+    float gravity = 0.0f;
+    float distance_range = 0.0f;
 };

@@ -22,13 +22,13 @@ namespace fb {
 
         void draw(const engine::render &r) override;
 
-        void update(double delta_time) override;
+        void update(float delta_time) override;
 
         std::unique_ptr<actor> clone() override;
 
-        std::pair<rect, rect> get_colliders() const;
+        std::pair<engine::rect, engine::rect> get_colliders() const;
 
-        bool is_touch(const rect &r) const;
+        bool is_touch(const engine::rect &r) const;
 
         const glm::vec2 &get_velocity() const;
 

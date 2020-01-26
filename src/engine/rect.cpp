@@ -1,5 +1,7 @@
 #include "rect.h"
 
+using namespace engine;
+
 rect::rect(glm::vec2 left_bottom, glm::vec2 right_top) :
         left_bottom(left_bottom),
         right_top(right_top) {

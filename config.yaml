@@ -2,7 +2,7 @@
 vertex_shader: 'shaders/def.vs.glsl'
 fragment_shader: 'shaders/def.fs.glsl'
 
-show_colliders: true
+show_colliders: false
 
 font: 'data/font/0.png'
 font_config: 'data/font/font.yaml'
@@ -16,3 +16,15 @@ sprites:
   bird: 'data/bird.png'
   back: 'data/back.png'
   tube: 'data/tube.png'
+
+text:
+  title: 'Flappy Bird'
+  game_over: 'Game over!'
+  congratulations: 'CONGRATULATIONS!'
+  about: 'created by nano. 2020'
+
+tube_step: 200.0
+bird_speed: 100.0
+jump_power: 9.5
+gravity: 10.0
+distance_range: 160.0

@@ -23,7 +23,7 @@ private:
     size_t score;
     size_t current_score = 0;
     const game_config &config;
-    game_state state = game_state::RUN;
+    game_state state = game_state::MENU;
 
     button_textures textures;
     engine::texture normal;
@@ -32,9 +32,4 @@ private:
     engine::texture back_texture;
     engine::texture bird_texture;
     engine::texture tube_texture;
-
-    std::unique_ptr<engine::button> start_button;
-    std::unique_ptr<engine::button> quit_button;
-
-    const size_t TUBES_NUMBER = 8;
 };

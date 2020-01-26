@@ -3,6 +3,7 @@
 #include <glm/vec2.hpp>
 #include <functional>
 #include <string>
+
 #include "actor.h"
 #include "texture.h"
 #include "rect.h"
@@ -33,7 +34,7 @@ namespace engine {
         button(
                 glm::vec2 pos,
                 glm::vec2 size,
-                std::string &&text,
+                std::string text,
                 texture_set textures,
                 pos_mode mode = pos_mode::CENTER
         );
@@ -44,7 +45,7 @@ namespace engine {
 
         void draw(const render &r) override;
 
-        void update(double delta_time) override;
+        void update(float delta_time) override;
 
         void set_state(button_state state);
 
@@ -54,7 +55,7 @@ namespace engine {
 
         rect get_bounds() const;
 
-        void set_on_click(on_click &&click);
+        void set_on_click(const on_click &click);
 
         void click(window &w);
 

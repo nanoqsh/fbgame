@@ -21,7 +21,7 @@ static bool load_bool(const char *key, const YAML::Node &node, bool def = false)
     return n && n.IsScalar() ? n.as<bool>() : def;
 }
 
-static std::string load_string(const char *key, const YAML::Node &node, const char *def) {
+static std::string load_string(const char *key, const YAML::Node &node, const char *def = "") {
     YAML::Node n = node[key];
     return n && n.IsScalar() ? n.as<std::string>() : std::string(def);
 }
@@ -52,17 +52,37 @@ game_config::game_config() {
     fragment_shader = load_string("fragment_shader", config, "shaders/def.fs.glsl");
     font = load_string("font", config, "data/font/0.png");
 
-    buttons = {
-            load_string("button_textures.normal", config, "data/button_normal.png"),
-            load_string("button_textures.hover", config, "data/button_hover.png"),
-            load_string("button_textures.active", config, "data/button_active.png")
-    };
+    YAML::Node button_textures = config["button_textures"];
+    if (button_textures) {
+        buttons = {
+                load_string("normal", button_textures, "data/button_normal.png"),
+                load_string("hover", button_textures, "data/button_hover.png"),
+                load_string("active", button_textures, "data/button_active.png")
+        };
+    }
 
-    bird = load_string("sprites.bird", config, "data/bird.png");
-    back = load_string("sprites.back", config, "data/back.png");
-    tube = load_string("sprites.tube", config, "data/tube.png");
+    YAML::Node sprites = config["sprites"];
+    if (sprites) {
+        bird = load_string("bird", sprites);
+        back = load_string("back", sprites);
+        tube = load_string("tube", sprites);
+    }
 
     show_colliders = load_bool("show_colliders", config);
+
+    YAML::Node text = config["text"];
+    if (text) {
+        title = load_string("title", text, "Flappy Bird");
+        game_over = load_string("game_over", text, "GAME OVER!");
+        congratulations = load_string("congratulations", text, "CONGRATULATIONS!");
+        about = load_string("about", text, "created by nano");
+    }
+
+    tube_step = load_float("tube_step", config, 200.0f);
+    bird_speed = load_float("bird_speed", config, 100.0f);
+    jump_power = load_float("jump_power", config, 9.5f);
+    gravity = load_float("gravity", config, 10.0f);
+    distance_range = load_float("distance_range", config, 160.0f);
 
     std::string font_file_path = load_string("font_config", config, "data/font/font.yaml");
     std::ifstream font_file;
@@ -131,4 +151,40 @@ const std::string &game_config::get_tube() const {
 
 bool game_config::get_show_colliders() const {
     return show_colliders;
+}
+
+const std::string &game_config::get_title() const {
+    return title;
+}
+
+const std::string &game_config::get_game_over() const {
+    return game_over;
+}
+
+const std::string &game_config::get_congratulations() const {
+    return congratulations;
+}
+
+const std::string &game_config::get_about() const {
+    return about;
+}
+
+float game_config::get_tube_step() const {
+    return tube_step;
+}
+
+float game_config::get_bird_speed() const {
+    return bird_speed;
+}
+
+float game_config::get_jump_power() const {
+    return jump_power;
+}
+
+float game_config::get_gravity() const {
+    return gravity;
+}
+
+float game_config::get_distance_range() const {
+    return distance_range;
 }

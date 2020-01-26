@@ -21,7 +21,7 @@ bird::bird(
 void bird::draw(const engine::render &r) {
     r.reset_color();
     glm::vec2 half_size = size * 0.5f;
-    r.draw(rect(pos - half_size, pos + half_size), sprite);
+    r.draw(engine::rect(pos - half_size, pos + half_size), sprite);
 
     if (game_config::get().get_show_colliders()) {
         r.set_color(glm::vec4(0.4f, 1.0f, 0.6f, 0.6f));
@@ -33,17 +33,17 @@ std::unique_ptr<engine::actor> bird::clone() {
     return std::make_unique<bird>(*this);
 }
 
-rect bird::get_collider() const {
+engine::rect bird::get_collider() const {
     glm::vec2 half_collider_size = collider_size * 0.5f;
-    return rect(pos - half_collider_size, pos + half_collider_size);
+    return engine::rect(pos - half_collider_size, pos + half_collider_size);
 }
 
-void bird::update(double delta_time) {
+void bird::update(float delta_time) {
     if (state != game_state::RUN) {
         return;
     }
 
-    velocity += gravity * (float) delta_time;
+    velocity += gravity * delta_time;
     move(velocity);
 }
 

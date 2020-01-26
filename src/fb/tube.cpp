@@ -27,11 +27,11 @@ void tube::draw(const engine::render &r) {
     glm::vec2 pos_bot = glm::vec2(pos.x, pos.y - half_distance - half_size.y);
     glm::vec2 pos_top = glm::vec2(pos.x, pos.y + half_distance + half_size.y);
 
-    rect flip_t = rect(0.0f, 1.0f, 1.0f, 0.0f);
+    engine::rect flip_t = engine::rect(0.0f, 1.0f, 1.0f, 0.0f);
 
     r.reset_color();
-    r.draw(rect(pos_bot - half_size, pos_bot + half_size), sprite);
-    r.draw(rect(pos_top - half_size, pos_top + half_size), sprite, flip_t);
+    r.draw(engine::rect(pos_bot - half_size, pos_bot + half_size), sprite);
+    r.draw(engine::rect(pos_top - half_size, pos_top + half_size), sprite, flip_t);
 
     if (game_config::get().get_show_colliders()) {
         auto[bot, top] = get_colliders();
@@ -42,32 +42,32 @@ void tube::draw(const engine::render &r) {
     }
 }
 
-void tube::update(double delta_time) {
+void tube::update(float delta_time) {
     if (state != game_state::RUN) {
         return;
     }
 
-    move(velocity * (float) delta_time);
+    move(velocity * delta_time);
 }
 
 std::unique_ptr<engine::actor> tube::clone() {
     return std::make_unique<tube>(*this);
 }
 
-std::pair<rect, rect> tube::get_colliders() const {
+std::pair<engine::rect, engine::rect> tube::get_colliders() const {
     float half_distance = distance * 0.5f;
     glm::vec2 half_collider_size = collider_size * 0.5f;
 
     glm::vec2 pos_bot = glm::vec2(pos.x, pos.y - half_distance - half_collider_size.y);
     glm::vec2 pos_top = glm::vec2(pos.x, pos.y + half_distance + half_collider_size.y);
 
-    return std::pair<rect, rect>(
-            rect(pos_bot - half_collider_size, pos_bot + half_collider_size),
-            rect(pos_top - half_collider_size, pos_top + half_collider_size)
+    return std::pair<engine::rect, engine::rect>(
+            engine::rect(pos_bot - half_collider_size, pos_bot + half_collider_size),
+            engine::rect(pos_top - half_collider_size, pos_top + half_collider_size)
     );
 }
 
-bool tube::is_touch(const rect &r) const {
+bool tube::is_touch(const engine::rect &r) const {
     auto[bot, top] = get_colliders();
     return bot.intersect_rect(r) || top.intersect_rect(r);
 }

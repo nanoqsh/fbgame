@@ -9,12 +9,12 @@ using namespace engine;
 button::button(
         glm::vec2 pos,
         glm::vec2 size,
-        std::string &&text,
+        std::string text,
         texture_set textures,
         pos_mode mode
 ) :
         size(size),
-        text(text),
+        text(std::move(text)),
         textures(textures),
         mode(mode) {
     this->pos = pos;
@@ -52,7 +52,7 @@ void button::draw(const render &r) {
     r.print(bounds.left_bottom + text_pos + text_offsets[(size_t) state], text.c_str());
 }
 
-void button::update(double) {}
+void button::update(float) {}
 
 void button::set_state(button_state s) {
     state = s;
@@ -75,7 +75,7 @@ rect button::get_bounds() const {
     }
 }
 
-void button::set_on_click(button::on_click &&click) {
+void button::set_on_click(const button::on_click &click) {
     on_click_fn = click;
 }
 

@@ -46,6 +46,14 @@ void window::set_on_start(window::on_start start) {
     start_fn = std::move(start);
 }
 
+void window::set_on_prerender(window::on_prerender prerender) {
+    prerender_fn = std::move(prerender);
+}
+
+void window::set_on_postrender(window::on_postrender postrender) {
+    postrender_fn = std::move(postrender);
+}
+
 void window::set_on_keypress(window::on_keypress keypress) {
     keypress_fn = std::move(keypress);
 }
@@ -84,12 +92,21 @@ void window::run(const window::on_update& update) {
         // update all actors
         for (actor &a: actors) {
             if (a.is_enable()) {
-                a.update(time.get_delta_time());
+                a.update((float) time.get_delta_time());
             }
         }
 
-        update(*this, *render_handler.get(), time.get_delta_time());
+        update(*this, time.get_delta_time());
+
+        if (prerender_fn) {
+            prerender_fn(*this, *render_handler.get());
+        }
+
         render_actors();
+
+        if (postrender_fn) {
+            postrender_fn(*this, *render_handler.get());
+        }
 
         glfwSwapBuffers(window_handler.get());
 
@@ -177,7 +194,7 @@ void window::mouse_click_callback(GLFWwindow *window_ptr, int mouse_button, int 
         }
     }
 
-    if (action == GLFW_RELEASE) {
+    if (action == GLFW_PRESS) {
         if (self->mouse_click_fn) {
             self->mouse_click_fn(*self, user_x, user_y);
         }

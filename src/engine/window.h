@@ -26,7 +26,9 @@ namespace engine {
         using window_ptr = std::unique_ptr<GLFWwindow, void (*)(GLFWwindow *)>;
         using render_ptr = std::unique_ptr<render>;
         using on_start = std::function<void(window &)>;
-        using on_update = std::function<void(window &, const render &, double delta_time)>;
+        using on_update = std::function<void(window &, float delta_time)>;
+        using on_prerender = std::function<void(window &, const render &)>;
+        using on_postrender = std::function<void(window &, const render &)>;
         using on_keypress = std::function<void(window &, const input &)>;
         using on_mouse_move = std::function<void(window &, float x, float y)>;
         using on_mouse_click = std::function<void(window &, float x, float y)>;
@@ -39,6 +41,10 @@ namespace engine {
         window &operator=(window) = delete;
 
         void set_on_start(on_start start);
+
+        void set_on_prerender(on_prerender prerender);
+
+        void set_on_postrender(on_postrender postrender);
 
         void set_on_keypress(on_keypress keypress);
 
@@ -69,6 +75,8 @@ namespace engine {
         render_ptr render_handler;
 
         on_start start_fn;
+        on_prerender prerender_fn;
+        on_postrender postrender_fn;
         on_keypress keypress_fn;
         on_mouse_move mouse_move_fn;
         on_mouse_click mouse_click_fn;
