@@ -62,7 +62,7 @@ game_config::game_config() {
     back = load_string("sprites.back", config, "data/back.png");
     tube = load_string("sprites.tube", config, "data/tube.png");
 
-    show_colliders = load_bool("bool", config);
+    show_colliders = load_bool("show_colliders", config);
 
     std::string font_file_path = load_string("font_config", config, "data/font/font.yaml");
     std::ifstream font_file;

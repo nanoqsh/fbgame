@@ -5,17 +5,19 @@
 #include "../engine/texture.h"
 #include "../engine/actor.h"
 #include "../engine/rect.h"
+#include "../game.h"
 
 namespace fb {
-    struct game_object : public engine::actor {
-        game_object(
+    struct bird : public engine::actor {
+        bird(
                 glm::vec2 pos,
                 glm::vec2 size,
                 glm::vec2 collider_size,
-                const engine::texture &sprite
+                const engine::texture &sprite,
+                const game_state& state
         );
 
-        ~game_object() override = default;
+        ~bird() override = default;
 
         void draw(const engine::render &r) override;
 
@@ -31,16 +33,17 @@ namespace fb {
 
         void add_velocity(const glm::vec2 &v);
 
-        float get_weight() const;
+        const glm::vec2 &get_gravity() const;
 
-        void set_weight(float w);
+        void set_gravity(const glm::vec2 &g);
 
     private:
         glm::vec2 size;
         glm::vec2 collider_size;
         const engine::texture &sprite;
+        const game_state& state;
 
-        glm::vec2 velocity;
-        float weight = 0;
+        glm::vec2 velocity = glm::vec2(0.0f);
+        glm::vec2 gravity = glm::vec2(0.0f);
     };
 }
