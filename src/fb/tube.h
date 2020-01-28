@@ -15,7 +15,7 @@ namespace fb {
                 glm::vec2 collider_size,
                 float distance,
                 const engine::texture &sprite,
-                const game_state& state
+                const game_state &state
         );
 
         ~tube() override = default;
@@ -45,7 +45,7 @@ namespace fb {
         glm::vec2 collider_size;
         float distance;
         const engine::texture &sprite;
-        const game_state& state;
+        const game_state &state;
 
         glm::vec2 velocity = glm::vec2(0.0f);
 

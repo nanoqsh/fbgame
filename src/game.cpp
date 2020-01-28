@@ -5,16 +5,15 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <memory>
-#include <random>
 #include <vector>
 
 #include "engine/window.h"
 #include "engine/render.h"
-#include "score.h"
-#include "fb/bird.h"
-#include "fb/tube.h"
 #include "engine/label.h"
 #include "engine/rect_actor.h"
+#include "fb/bird.h"
+#include "fb/tube.h"
+#include "score.h"
 
 using namespace engine;
 using namespace fb;
@@ -28,7 +27,8 @@ game::game() :
         active(textures.active),
         back_texture(config.get_back()),
         bird_texture(config.get_bird()),
-        tube_texture(config.get_tube()) {}
+        tube_texture(config.get_tube()),
+        rnd(config.get_distance_range()) {}
 
 void game::run() {
     float screen_width = 700.0f;
@@ -51,7 +51,6 @@ void game::run() {
     float bird_speed = config.get_bird_speed();
     float jump_power = config.get_jump_power();
     float gravity = config.get_gravity();
-    float distance_range = config.get_distance_range();
 
     float button_width = 128.0f;
     float button_height = 32.0f;
@@ -60,13 +59,6 @@ void game::run() {
     float bird_sprite_height = 36.0f;
     float bird_collider_width = 32.0f;
     float bird_collider_height = 28.0f;
-
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(
-            distance_range * -0.5,
-            distance_range * 0.5
-    );
 
     std::stringstream ss;
     ss << "HIGH SCORE: " << score;
@@ -110,10 +102,7 @@ void game::run() {
     std::vector<tube> tubes;
     for (size_t i = 0; i < tubes_number; ++i) {
         tube t(
-                glm::vec2(
-                        screen_half_width + tube_step + tube_step * i,
-                        screen_half_height + dis(gen)
-                ),
+                glm::vec2(0.0f, 0.0f),
                 glm::vec2(tube_width, tube_height),
                 glm::vec2(tube_width, tube_height),
                 tube_distance,
@@ -167,7 +156,7 @@ void game::run() {
         for (tube &t: tubes) {
             t.set_pos(glm::vec2(
                     screen_half_width + tube_step + tube_step * i,
-                    screen_half_height + dis(gen)
+                    screen_half_height + rnd.get_value()
             ));
 
             t.set_overcome(false);
@@ -281,7 +270,7 @@ void game::run() {
 
             if (old_pos.x < tube_left_bound) {
                 float dif = old_pos.x - tube_left_bound;
-                t.set_pos(glm::vec2(tube_right_bound + dif, screen_half_height + dis(gen)));
+                t.set_pos(glm::vec2(tube_right_bound + dif, screen_half_height + rnd.get_value()));
                 t.set_overcome(false);
             }
 

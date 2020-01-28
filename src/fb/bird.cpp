@@ -9,7 +9,7 @@ bird::bird(
         glm::vec2 size,
         glm::vec2 collider_size,
         const engine::texture &sprite,
-        const game_state& state
+        const game_state &state
 ) :
         size(size),
         collider_size(collider_size),

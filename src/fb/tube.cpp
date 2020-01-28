@@ -10,7 +10,7 @@ tube::tube(
         glm::vec2 collider_size,
         float distance,
         const engine::texture &sprite,
-        const game_state& state
+        const game_state &state
 ) :
         size(size),
         collider_size(collider_size),

@@ -3,6 +3,7 @@
 #include "game_config.h"
 #include "engine/texture.h"
 #include "engine/button.h"
+#include "random.h"
 
 enum class game_state {
     MENU = 0,
@@ -32,4 +33,6 @@ private:
     engine::texture back_texture;
     engine::texture bird_texture;
     engine::texture tube_texture;
+
+    random rnd;
 };

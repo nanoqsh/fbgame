@@ -27,6 +27,7 @@ add_executable(fbgame
         src/game.h
         src/path.h
         src/score.h
+        src/random.h
         )
 
 
