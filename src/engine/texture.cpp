@@ -8,9 +8,8 @@
 
 using namespace engine;
 
-texture::texture(std::string file):
-    file(std::move(file))
-{}
+texture::texture(std::string file) :
+        file(std::move(file)) {}
 
 texture::~texture() {
     if (initialized) {
@@ -38,7 +37,10 @@ std::pair<int, int> texture::get_size() const {
 void texture::init() const {
     files::check_existence(file.c_str());
 
-    uint8_t *image = SOIL_load_image(file.c_str(), &width, &height, nullptr, SOIL_LOAD_RGBA);
+    std::unique_ptr<uint8_t, void (*)(uint8_t *)> image(
+            SOIL_load_image(file.c_str(), &width, &height, nullptr, SOIL_LOAD_RGBA),
+            SOIL_free_image_data
+    );
 
     if (!image) {
         std::string message("image loading error: ");
@@ -50,8 +52,7 @@ void texture::init() const {
     glGenTextures(1, &texture_handler);
     glBindTexture(GL_TEXTURE_2D, texture_handler);
 
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
-    SOIL_free_image_data(image);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image.get());
 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
